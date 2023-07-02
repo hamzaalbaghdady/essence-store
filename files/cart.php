@@ -1,3 +1,14 @@
+<head>
+    <style>
+        .fa-close {
+            font-size: 20px;
+        }
+
+        .fa-close:hover {
+            color: red;
+        }
+    </style>
+</head>
 <div class="cart-bg-overlay"></div>
 
 <div class="right-side-cart-area">
