@@ -27,7 +27,7 @@
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="index.html"><img src="img/core-img/logo.png" alt=""></a>
+                <a class="nav-brand" href="index.php"><img src="img/core-img/logo.png" alt=""></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -45,27 +45,27 @@
                                 <div class="megamenu">
                                     <ul class="single-mega cn-col-4">
                                         <li class="title">Women's Collection</li>
-                                        <li><a href="shop.html">Dresses</a></li>
-                                        <li><a href="shop.html">Blouses &amp; Shirts</a></li>
-                                        <li><a href="shop.html">T-shirts</a></li>
-                                        <li><a href="shop.html">Rompers</a></li>
-                                        <li><a href="shop.html">Bras &amp; Panties</a></li>
+                                        <li><a href="shop.php">Dresses</a></li>
+                                        <li><a href="shop.php">Blouses &amp; Shirts</a></li>
+                                        <li><a href="shop.php">T-shirts</a></li>
+                                        <li><a href="shop.php">Rompers</a></li>
+                                        <li><a href="shop.php">Bras &amp; Panties</a></li>
                                     </ul>
                                     <ul class="single-mega cn-col-4">
                                         <li class="title">Men's Collection</li>
-                                        <li><a href="shop.html">T-Shirts</a></li>
-                                        <li><a href="shop.html">Polo</a></li>
-                                        <li><a href="shop.html">Shirts</a></li>
-                                        <li><a href="shop.html">Jackets</a></li>
-                                        <li><a href="shop.html">Trench</a></li>
+                                        <li><a href="shop.php">T-Shirts</a></li>
+                                        <li><a href="shop.php">Polo</a></li>
+                                        <li><a href="shop.php">Shirts</a></li>
+                                        <li><a href="shop.php">Jackets</a></li>
+                                        <li><a href="shop.php">Trench</a></li>
                                     </ul>
                                     <ul class="single-mega cn-col-4">
                                         <li class="title">Kid's Collection</li>
-                                        <li><a href="shop.html">Dresses</a></li>
-                                        <li><a href="shop.html">Shirts</a></li>
-                                        <li><a href="shop.html">T-shirts</a></li>
-                                        <li><a href="shop.html">Jackets</a></li>
-                                        <li><a href="shop.html">Trench</a></li>
+                                        <li><a href="shop.php">Dresses</a></li>
+                                        <li><a href="shop.php">Shirts</a></li>
+                                        <li><a href="shop.php">T-shirts</a></li>
+                                        <li><a href="shop.php">Jackets</a></li>
+                                        <li><a href="shop.php">Trench</a></li>
                                     </ul>
                                     <div class="single-mega cn-col-4">
                                         <img src="img/bg-img/bg-6.jpg" alt="">
@@ -74,18 +74,18 @@
                             </li>
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="single-product-details.html">Product Details</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="single-blog.html">Single Blog</a></li>
-                                    <li><a href="regular-page.html">Regular Page</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="index.php">Home</a></li>
+                                    <li><a href="shop.php">Shop</a></li>
+                                    <li><a href="single-product-details.php">Product Details</a></li>
+                                    <li><a href="checkout.php">Checkout</a></li>
+                                    <li><a href="blog.php">Blog</a></li>
+                                    <li><a href="single-blog.php">Single Blog</a></li>
+                                    <li><a href="regular-page.php">Regular Page</a></li>
+                                    <li><a href="contact.php">Contact</a></li>
                                 </ul>
                             </li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="blog.php">Blog</a></li>
+                            <li><a href="contact.php">Contact</a></li>
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -139,7 +139,7 @@
                         <img src="img/product-img/product-1.jpg" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
                         <div class="cart-item-desc">
-                          <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                            <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                             <span class="badge">Mango</span>
                             <h6>Button Through Strap Mini Dress</h6>
                             <p class="size">Size: S</p>
@@ -155,7 +155,7 @@
                         <img src="img/product-img/product-2.jpg" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
                         <div class="cart-item-desc">
-                          <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                            <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                             <span class="badge">Mango</span>
                             <h6>Button Through Strap Mini Dress</h6>
                             <p class="size">Size: S</p>
@@ -171,7 +171,7 @@
                         <img src="img/product-img/product-3.jpg" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
                         <div class="cart-item-desc">
-                          <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                            <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                             <span class="badge">Mango</span>
                             <h6>Button Through Strap Mini Dress</h6>
                             <p class="size">Size: S</p>
@@ -193,64 +193,155 @@
                     <li><span>total:</span> <span>$232.00</span></li>
                 </ul>
                 <div class="checkout-btn mt-100">
-                    <a href="checkout.html" class="btn essence-btn">check out</a>
+                    <a href="checkout.php" class="btn essence-btn">check out</a>
                 </div>
             </div>
         </div>
     </div>
     <!-- ##### Right Side Cart End ##### -->
 
-    <!-- ##### Single Product Details Area Start ##### -->
-    <section class="single_product_details_area d-flex align-items-center">
-
-        <!-- Single Product Thumb -->
-        <div class="single_product_thumb clearfix">
-            <div class="product_thumbnail_slides owl-carousel">
-                <img src="img/product-img/product-big-1.jpg" alt="">
-                <img src="img/product-img/product-big-2.jpg" alt="">
-                <img src="img/product-img/product-big-3.jpg" alt="">
-            </div>
-        </div>
-
-        <!-- Single Product Description -->
-        <div class="single_product_desc clearfix">
-            <span>mango</span>
-            <a href="cart.html">
-                <h2>One Shoulder Glitter Midi Dress</h2>
-            </a>
-            <p class="product-price"><span class="old-price">$65.00</span> $49.00</p>
-            <p class="product-desc">Mauris viverra cursus ante laoreet eleifend. Donec vel fringilla ante. Aenean finibus velit id urna vehicula, nec maximus est sollicitudin.</p>
-
-            <!-- Form -->
-            <form class="cart-form clearfix" method="post">
-                <!-- Select Box -->
-                <div class="select-box d-flex mt-50 mb-30">
-                    <select name="select" id="productSize" class="mr-5">
-                        <option value="value">Size: XL</option>
-                        <option value="value">Size: X</option>
-                        <option value="value">Size: M</option>
-                        <option value="value">Size: S</option>
-                    </select>
-                    <select name="select" id="productColor">
-                        <option value="value">Color: Black</option>
-                        <option value="value">Color: White</option>
-                        <option value="value">Color: Red</option>
-                        <option value="value">Color: Purple</option>
-                    </select>
-                </div>
-                <!-- Cart & Favourite Box -->
-                <div class="cart-fav-box d-flex align-items-center">
-                    <!-- Cart -->
-                    <button type="submit" name="addtocart" value="5" class="btn essence-btn">Add to cart</button>
-                    <!-- Favourite -->
-                    <div class="product-favourite ml-4">
-                        <a href="#" class="favme fa fa-heart"></a>
+    <!-- ##### Breadcumb Area Start ##### -->
+    <div class="breadcumb_area breadcumb-style-two bg-img" style="background-image: url(img/bg-img/breadcumb2.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>Fashion Blog</h2>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </section>
-    <!-- ##### Single Product Details Area End ##### -->
+    </div>
+    <!-- ##### Breadcumb Area End ##### -->
+
+    <!-- ##### Blog Wrapper Area Start ##### -->
+    <div class="blog-wrapper section-padding-80">
+        <div class="container">
+            <div class="row">
+
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="img/bg-img/blog1.jpg" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce enim nulla, mollis eu metus in, sagittis fringilla tortor. Phasellus purus dignissim convallis.</p>
+                            <a href="#">Continue reading <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="img/bg-img/blog2.jpg" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce enim nulla, mollis eu metus in, sagittis fringilla tortor. Phasellus purus dignissim convallis.</p>
+                            <a href="#">Continue reading <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="img/bg-img/blog3.jpg" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce enim nulla, mollis eu metus in, sagittis fringilla tortor. Phasellus purus dignissim convallis.</p>
+                            <a href="#">Continue reading <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="img/bg-img/blog4.jpg" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce enim nulla, mollis eu metus in, sagittis fringilla tortor. Phasellus purus dignissim convallis.</p>
+                            <a href="#">Continue reading <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="img/bg-img/blog5.jpg" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce enim nulla, mollis eu metus in, sagittis fringilla tortor. Phasellus purus dignissim convallis.</p>
+                            <a href="#">Continue reading <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="img/bg-img/blog6.jpg" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <a href="#">Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada</a>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce enim nulla, mollis eu metus in, sagittis fringilla tortor. Phasellus purus dignissim convallis.</p>
+                            <a href="#">Continue reading <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Blog Wrapper Area End ##### -->
 
     <!-- ##### Footer Area Start ##### -->
     <footer class="footer_area clearfix">
@@ -266,9 +357,9 @@
                         <!-- Footer Menu -->
                         <div class="footer_menu">
                             <ul>
-                                <li><a href="shop.html">Shop</a></li>
-                                <li><a href="blog.html">Blog</a></li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="shop.php">Shop</a></li>
+                                <li><a href="blog.php">Blog</a></li>
+                                <li><a href="contact.php">Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -317,17 +408,22 @@
                 </div>
             </div>
 
-<div class="row mt-5">
+            <div class="row mt-5">
                 <div class="col-md-12 text-center">
                     <p>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>, distributed by <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>
+                            document.write(new Date().getFullYear());
+                        </script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>, distributed by <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </p>
                 </div>
             </div>
 
         </div>
+
+
+
     </footer>
     <!-- ##### Footer Area End ##### -->
 

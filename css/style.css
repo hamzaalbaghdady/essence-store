@@ -1,4 +1,4 @@
-    /* ####################################################
+/* ####################################################
     :: Template Name: Essence - Fashion Ecommerce Template
     :: Author: Colorlib
     :: Author URL: https://colorlib.com
@@ -8,6 +8,15 @@
     :: Last Updated: May 2, 2018
     #################################################### */
 
-    /* ---------------------------------------
+/* ---------------------------------------
     ##### - PLACE YOUR CUSTOM CSS HERE - #####
     --------------------------------------- */
+.fa-heart,
+.fa-arrow-right-to-bracket,
+.fa-cart-shopping {
+  color: black;
+  font-size: 20px;
+}
+a:hover .fa-heart {
+  color: red;
+}

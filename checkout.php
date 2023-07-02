@@ -27,7 +27,7 @@
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="index.html"><img src="img/core-img/logo.png" alt=""></a>
+                <a class="nav-brand" href="index.php"><img src="img/core-img/logo.png" alt=""></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -45,27 +45,27 @@
                                 <div class="megamenu">
                                     <ul class="single-mega cn-col-4">
                                         <li class="title">Women's Collection</li>
-                                        <li><a href="shop.html">Dresses</a></li>
-                                        <li><a href="shop.html">Blouses &amp; Shirts</a></li>
-                                        <li><a href="shop.html">T-shirts</a></li>
-                                        <li><a href="shop.html">Rompers</a></li>
-                                        <li><a href="shop.html">Bras &amp; Panties</a></li>
+                                        <li><a href="shop.php">Dresses</a></li>
+                                        <li><a href="shop.php">Blouses &amp; Shirts</a></li>
+                                        <li><a href="shop.php">T-shirts</a></li>
+                                        <li><a href="shop.php">Rompers</a></li>
+                                        <li><a href="shop.php">Bras &amp; Panties</a></li>
                                     </ul>
                                     <ul class="single-mega cn-col-4">
                                         <li class="title">Men's Collection</li>
-                                        <li><a href="shop.html">T-Shirts</a></li>
-                                        <li><a href="shop.html">Polo</a></li>
-                                        <li><a href="shop.html">Shirts</a></li>
-                                        <li><a href="shop.html">Jackets</a></li>
-                                        <li><a href="shop.html">Trench</a></li>
+                                        <li><a href="shop.php">T-Shirts</a></li>
+                                        <li><a href="shop.php">Polo</a></li>
+                                        <li><a href="shop.php">Shirts</a></li>
+                                        <li><a href="shop.php">Jackets</a></li>
+                                        <li><a href="shop.php">Trench</a></li>
                                     </ul>
                                     <ul class="single-mega cn-col-4">
                                         <li class="title">Kid's Collection</li>
-                                        <li><a href="shop.html">Dresses</a></li>
-                                        <li><a href="shop.html">Shirts</a></li>
-                                        <li><a href="shop.html">T-shirts</a></li>
-                                        <li><a href="shop.html">Jackets</a></li>
-                                        <li><a href="shop.html">Trench</a></li>
+                                        <li><a href="shop.php">Dresses</a></li>
+                                        <li><a href="shop.php">Shirts</a></li>
+                                        <li><a href="shop.php">T-shirts</a></li>
+                                        <li><a href="shop.php">Jackets</a></li>
+                                        <li><a href="shop.php">Trench</a></li>
                                     </ul>
                                     <div class="single-mega cn-col-4">
                                         <img src="img/bg-img/bg-6.jpg" alt="">
@@ -74,18 +74,18 @@
                             </li>
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="single-product-details.html">Product Details</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="single-blog.html">Single Blog</a></li>
-                                    <li><a href="regular-page.html">Regular Page</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="index.php">Home</a></li>
+                                    <li><a href="shop.php">Shop</a></li>
+                                    <li><a href="single-product-details.php">Product Details</a></li>
+                                    <li><a href="checkout.php">Checkout</a></li>
+                                    <li><a href="blog.php">Blog</a></li>
+                                    <li><a href="single-blog.php">Single Blog</a></li>
+                                    <li><a href="regular-page.php">Regular Page</a></li>
+                                    <li><a href="contact.php">Contact</a></li>
                                 </ul>
                             </li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="blog.php">Blog</a></li>
+                            <li><a href="contact.php">Contact</a></li>
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -139,7 +139,7 @@
                         <img src="img/product-img/product-1.jpg" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
                         <div class="cart-item-desc">
-                          <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                            <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                             <span class="badge">Mango</span>
                             <h6>Button Through Strap Mini Dress</h6>
                             <p class="size">Size: S</p>
@@ -155,7 +155,7 @@
                         <img src="img/product-img/product-2.jpg" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
                         <div class="cart-item-desc">
-                          <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                            <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                             <span class="badge">Mango</span>
                             <h6>Button Through Strap Mini Dress</h6>
                             <p class="size">Size: S</p>
@@ -171,7 +171,7 @@
                         <img src="img/product-img/product-3.jpg" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
                         <div class="cart-item-desc">
-                          <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                            <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
                             <span class="badge">Mango</span>
                             <h6>Button Through Strap Mini Dress</h6>
                             <p class="size">Size: S</p>
@@ -193,7 +193,7 @@
                     <li><span>total:</span> <span>$232.00</span></li>
                 </ul>
                 <div class="checkout-btn mt-100">
-                    <a href="checkout.html" class="btn essence-btn">check out</a>
+                    <a href="checkout.php" class="btn essence-btn">check out</a>
                 </div>
             </div>
         </div>
@@ -388,9 +388,9 @@
                         <!-- Footer Menu -->
                         <div class="footer_menu">
                             <ul>
-                                <li><a href="shop.html">Shop</a></li>
-                                <li><a href="blog.html">Blog</a></li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="shop.php">Shop</a></li>
+                                <li><a href="blog.php">Blog</a></li>
+                                <li><a href="contact.php">Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -439,16 +439,18 @@
                 </div>
             </div>
 
-<div class="row mt-5">
+            <div class="row mt-5">
                 <div class="col-md-12 text-center">
                     <p>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>, distributed by <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>
+                            document.write(new Date().getFullYear());
+                        </script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>, distributed by <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </p>
                 </div>
             </div>
-            
+
         </div>
 
 
