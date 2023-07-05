@@ -38,7 +38,7 @@
                     <div class="hero-content">
                         <h6>asoss</h6>
                         <h2>New Collection</h2>
-                        <a href="#" class="btn essence-btn">view collection</a>
+                        <a href="shop.php" class="btn essence-btn">view collection</a>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(img/bg-img/bg-2.jpg);">
                         <div class="catagory-content">
-                            <a href="shop.php">Clothing</a>
+                            <a href="clothing.php">Clothing</a>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(img/bg-img/bg-3.jpg);">
                         <div class="catagory-content">
-                            <a href="shop.php">Shoes</a>
+                            <a href="shoes.php">Shoes</a>
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(img/bg-img/bg-4.jpg);">
                         <div class="catagory-content">
-                            <a href="shop.php">Accessories</a>
+                            <a href="accessories.php">Accessories</a>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                             <div class="cta--text">
                                 <h6>-60%</h6>
                                 <h2>Global Sale</h2>
-                                <a href="#" class="btn essence-btn">Buy Now</a>
+                                <a href="shop.php" class="btn essence-btn">Buy Now</a>
                             </div>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                                 <div class="hover-content">
                                     <!-- Add to Cart -->
                                     <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
+                                        <a href="single-product-details.php" class="btn essence-btn">Add to Cart</a>
                                     </div>
                                 </div>
                             </div>

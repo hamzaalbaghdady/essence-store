@@ -58,15 +58,27 @@
             <!-- Navbar End -->
 
 
-            <!-- Blank Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
-                    <div class="col-md-6 text-center">
-                        <h3>This is blank page</h3>
+            <!-- Form Start -->
+            <div class="container-fluid pt-4 px-4 ">
+                <div class="col-sm-12 col-xl-6 mx-auto w-75">
+                    <div class="bg-secondary rounded h-100 p-4">
+                        <h6 class="mb-4">Add New Category</h6>
+                        <form action="" method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name">
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="reset" class="btn btn-primary">Cancle</button>
+                        </form>
                     </div>
+
+
                 </div>
             </div>
-            <!-- Blank End -->
+            <!-- Form End -->
 
 
             <!-- Footer Start -->

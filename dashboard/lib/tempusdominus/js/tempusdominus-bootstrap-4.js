@@ -2107,7 +2107,7 @@ if ((version[0] <= 2 && version[1] < 17) || version[0] >= 3) {
           if (this._isEnabled("m")) {
             if (this._isEnabled("h")) {
               topRow.append($("<td>").addClass("separator"));
-              middleRow.append($("<td>").addClass("separator").php(":"));
+              middleRow.append($("<td>").addClass("separator").html(":"));
               bottomRow.append($("<td>").addClass("separator"));
             }
             topRow.append(
@@ -2151,7 +2151,7 @@ if ((version[0] <= 2 && version[1] < 17) || version[0] >= 3) {
           if (this._isEnabled("s")) {
             if (this._isEnabled("m")) {
               topRow.append($("<td>").addClass("separator"));
-              middleRow.append($("<td>").addClass("separator").php(":"));
+              middleRow.append($("<td>").addClass("separator").html(":"));
               bottomRow.append($("<td>").addClass("separator"));
             }
             topRow.append(
@@ -2663,7 +2663,7 @@ if ((version[0] <= 2 && version[1] < 17) || version[0] >= 3) {
           startYear.year() +
           "</span>";
 
-        yearsView.find("td").php(html);
+        yearsView.find("td").html(html);
       };
 
       TempusDominusBootstrap4.prototype._updateDecades =
@@ -2754,7 +2754,7 @@ if ((version[0] <= 2 && version[1] < 17) || version[0] >= 3) {
             startDecade.year() +
             "</span>";
 
-          decadesView.find("td").php(html);
+          decadesView.find("td").html(html);
         };
 
       TempusDominusBootstrap4.prototype._fillDate = function _fillDate() {
