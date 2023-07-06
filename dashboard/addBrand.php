@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Add Category</title>
+    <title>Add Brand</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -63,7 +63,7 @@
             <div class="container-fluid pt-4 px-4 ">
                 <div class="col-sm-12 col-xl-6 mx-auto w-75">
                     <div class="bg-secondary rounded h-100 p-4">
-                        <h6 class="mb-4">Add New Category</h6>
+                        <h6 class="mb-4">Add New Brand</h6>
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>

@@ -30,7 +30,7 @@
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-user me-2"></i>Users</a>
                 <div class="dropdown-menu bg-transparent border-0">
                     <a href="#" class="dropdown-item">Home</a>
-                    <a href="#" class="dropdown-item">Edit User</a>
+                    <a href="editUser.php" class="dropdown-item">Edit User</a>
                     <a href="#" class="dropdown-item">Delete User</a>
                     <a href="#" class="dropdown-item">Block User</a>
                 </div>
@@ -60,11 +60,11 @@
             <!--  -->
             <!--  -->
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-gift me-2"></i>Brands</a>
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-flag me-2"></i>Brands</a>
                 <div class="dropdown-menu bg-transparent border-0">
-                    <a href="#" class="dropdown-item">Add Brand</a>
-                    <a href="#" class="dropdown-item">Edit Brand</a>
-                    <a href="#" class="dropdown-item">Delete Brand</a>
+                    <a href="addBrand.php" class="dropdown-item">Add Brand</a>
+                    <a href="editBrand.php" class="dropdown-item">Edit Brand</a>
+                    <a href="deleteBrand.php" class="dropdown-item">Delete Brand</a>
                 </div>
             </div>
             <!--  -->

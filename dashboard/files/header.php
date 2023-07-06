@@ -1,4 +1,7 @@
 <head>
+    <!-- Favicon  -->
+    <!-- <link rel="icon" href="../img/core-img/favicon.ico"> -->
+    <link rel="icon" href="../img/core-img/favicon.ico">
     <style>
         /* scrollbar  */
         ::-webkit-scrollbar {
@@ -30,8 +33,15 @@
     <a href="#" class="sidebar-toggler flex-shrink-0">
         <i class="fa fa-bars"></i>
     </a>
-    <form class="d-none d-md-flex ms-4">
-        <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+    <form class="d-none d-md-flex ms-4" action="test.php" method="post" title="Press Enter to search">
+        <input class="form-control bg-dark border-0 me-1" type="search" placeholder="Search" name="search">
+        <select name="field" class="form-select w-25">
+            <option selected>Field</option>
+            <option value="Users">Users</option>
+            <option value="Products">Products</option>
+            <option value="Categories">Categories</option>
+            <option value="Brands">Brands</option>
+        </select>
     </form>
 
     <div class="navbar-nav align-items-center ms-auto">
