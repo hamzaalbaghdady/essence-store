@@ -6,7 +6,7 @@ class Database
     private $serverName = "localhost";
     private $userName = "root";
     private $password = "";
-    private $DBName = "web2finalproject";
+    private $DBName = "essenc_store";
 
     public $conn = null;
 

@@ -32,7 +32,8 @@
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <!-- My Stylesheet -->
+    <link href="css/myStyle.css" rel="stylesheet">
 </head>
 
 <body>
@@ -83,27 +84,28 @@
                                 </div>
 
                                 <div class="mb-2 col-sm-12 col-xl-6">
-                                    <label for="categories" class="form-label">Select categories</label>
-                                    <select class="form-select mb-2" id="categories" name="categories[]" multiple>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <label for="item-select" class="form-label">Select categories</label>
+                                    <select class="form-select mb-2" id="item-select" name="categories[]" multiple onchange="handleItemSelection()">
+                                        <option value="1" title="One">One</option>
+                                        <option value="2" title="Two">Two</option>
+                                        <option value="3" title="Three">Three</option>
                                     </select>
+                                    <div id="badge-container"></div>
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="colors" class="form-label">Select colors</label>
-                                    <select class="form-select mb-2" id="colors" name="colors[]" multiple>
-                                        <option value="1" style="background-color: aqua;">aqua</option>
-                                        <option value="1" style="background-color: red;">red</option>
-                                        <option value="1" style="background-color: green;">green</option>
-                                        <option value="1" style="background-color: black;">black</option>
-                                        <option value="1" style="background-color: white;">white</option>
-                                        <option value="1" style="background-color: yellow;">yellow</option>
-                                        <option value="1" style="background-color: blue;">blue</option>
-                                        <option value="1" style="background-color: gray;">gray</option>
-                                        <option value="1">Other</option>
-
+                                    <select class="form-select mb-2" id="colors" name="colors[]" multiple onchange="handleColorsSelection()">
+                                        <option value="aqua">aqua</option>
+                                        <option value="red">red</option>
+                                        <option value="green">green</option>
+                                        <option value="black">black</option>
+                                        <option value="white">white</option>
+                                        <option value="yellow">yellow</option>
+                                        <option value="blue">blue</option>
+                                        <option value="gray">gray</option>
+                                        <option value="transparent">Other</option>
                                     </select>
+                                    <div id="colors-container"></div>
                                 </div>
 
                                 <div class="mb-2 col-sm-12 col-xl-6">
@@ -116,14 +118,10 @@
                                     </select>
                                 </div>
 
-                                <!-- <div class="mb-3 col-sm-12 col-xl-6">
-                                    <label for="color" class="form-label">Choose Product Colors</label>
-                                    <input class="form-control bg-dark h-50" type="color" id="color" multiple value="#EB1616">
-                                </div> -->
-
                                 <div class="mb-3 col-sm-12 col-xl-6">
-                                    <label for="formFileMultiple" class="form-label">Choose Product Images</label>
-                                    <input class="form-control bg-dark" type="file" name="files[]" id="formFileMultiple" multiple>
+                                    <label for="file-input" class="form-label">Choose Product Images</label>
+                                    <input class="form-control bg-dark mb-3" type="file" name="files[]" id="file-input" accept="image/*" multiple>
+                                    <div id="image-container"></div>
                                 </div>
 
                             </div>
@@ -167,6 +165,8 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+
+    <script src="js/myscript.js"></script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

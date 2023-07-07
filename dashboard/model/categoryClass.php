@@ -13,7 +13,7 @@ class Category
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("INSERT INTO `category`(`c_name`) VALUES (:name);");
+            $sql = $conn->prepare("INSERT INTO `categories`(`name`) VALUES (:name);");
             $sql->bindParam(':name', $name);
             // no results return
             $sql->execute();
@@ -33,7 +33,7 @@ class Category
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("UPDATE `category` c SET `c_name`=:name WHERE c.c_id=:id;");
+            $sql = $conn->prepare("UPDATE `categories` c SET `name`=:name WHERE c.id=:id;");
 
             $sql->bindParam(':id', $id);
             $sql->bindParam(':name', $name);
@@ -55,7 +55,7 @@ class Category
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("DELETE FROM `category`  WHERE c_id=:id;");
+            $sql = $conn->prepare("DELETE FROM `categories`  WHERE id=:id;");
             $sql->bindParam(':id', $id);
             // no results return
             $sql->execute();
@@ -80,9 +80,9 @@ class Category
             // echo "Connected successfully";
             if ($id == "") {
                 // return only one record
-                $sql = $conn->prepare("SELECT * FROM `category`;");
+                $sql = $conn->prepare("SELECT * FROM `categories`;");
             } else {
-                $sql = $conn->prepare("SELECT * FROM `category` c WHERE c.c_id=:id;");
+                $sql = $conn->prepare("SELECT * FROM `categories` c WHERE c.id=:id;");
                 $sql->bindParam(':id', $id);
             }
             $sql->execute();

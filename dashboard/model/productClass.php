@@ -4,16 +4,9 @@ require_once "database.php";
 
 class store
 {
-    // private $s_id;
-    // private $s_name;
-    // private $address;
-    // private $phone_num;
-    // private $rate;
-    // private $cat_no;
-    // private $img_src;
 
     // add store to database, no return value
-    public function addStore($name, $address, $phone_num, $src, $cat_no)
+    public function addProduct($name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $cat_no)
     {
         try {
             $db = new Database;
@@ -21,18 +14,21 @@ class store
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("INSERT INTO `store`( `s_name`, `address`, `phone_num`, `img_src`, `cat_no`)
-             VALUES (:name,:address,:phone,:img,:cat);");
+            $sql = $conn->prepare("INSERT INTO `products`(`name`, `price`, `quantity`, `discount`, `colors`, `brand`, `description`, `images_src`)
+             VALUES (':name',':price',':quan',':discount',':colors',':brand',':descr',':src');");
             // parameters
             $sql->bindParam(':name', $name);
-            $sql->bindParam(':address', $address);
-            $sql->bindParam(':phone', $phone_num);
-            $sql->bindParam(':img', $src);
-            $sql->bindParam(':cat', $cat_no);
+            $sql->bindParam(':price', $price, pdo::PARAM_INT);
+            $sql->bindParam(':quan', $quntity, pdo::PARAM_INT);
+            $sql->bindParam(':discount', $discount, pdo::PARAM_INT);
+            $sql->bindParam(':colors', $colors);
+            $sql->bindParam(':brand', $brand);
+            $sql->bindParam(':descr', $description);
+            $sql->bindParam(':src', $images_src);
             // execution
             $sql->execute();
-            $sql2 = $conn->prepare("INSERT INTO `store_category`(`s_id`, `c_id`) VALUES (LAST_INSERT_ID(), :cid);");
-            $sql2->bindParam(':cid', $cat_no);
+            $sql2 = $conn->prepare("INSERT INTO `product_category`(`product_id`, `category_id`) VALUES (LAST_INSERT_ID(), :cid);");
+            $sql2->bindParam(':cid', $cat_no, pdo::PARAM_INT);
             $sql2->execute();
 
             echo "New record created successfully";
@@ -43,7 +39,7 @@ class store
     }
 
     // edit store in database, no return value
-    public function editStore($id, $name, $address, $phone_num, $src, $cat_no)
+    public function editProduct($id, $name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $cat_no)
     {
         try {
             $db = new Database;
@@ -51,16 +47,18 @@ class store
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("UPDATE `store` s SET `s_name`=:name,`address`=:address,
-            `phone_num`= :phone,`img_src`=:img,`cat_no`=:cat WHERE s.s_id=:id");
+            $sql = $conn->prepare("UPDATE `products` p SET `name`=:name, `price`=:price, `quantity`=:quan, `discount`=:discount, `colors`=:colors, `brand`=:brand, `description`=:descr, `images_src`=:src WHERE p.id=:id;");
             // parameters
 
-            $sql->bindParam(':id', $id);
+            $sql->bindParam(':id', $id, pdo::PARAM_INT);
             $sql->bindParam(':name', $name);
-            $sql->bindParam(':address', $address);
-            $sql->bindParam(':phone', $phone_num);
-            $sql->bindParam(':img', $src);
-            $sql->bindParam(':cat', $cat_no);
+            $sql->bindParam(':price', $price, pdo::PARAM_INT);
+            $sql->bindParam(':quan', $quntity, pdo::PARAM_INT);
+            $sql->bindParam(':discount', $discount, pdo::PARAM_INT);
+            $sql->bindParam(':colors', $colors);
+            $sql->bindParam(':brand', $brand);
+            $sql->bindParam(':descr', $description);
+            $sql->bindParam(':src', $images_src);
             // execution
 
             $sql->execute();
@@ -95,7 +93,7 @@ class store
     }
 
     // deletes a specifec store based on id in database
-    public function deleteStore($id)
+    public function deleteProduct($id)
     {
         try {
             $db = new Database;
@@ -103,7 +101,7 @@ class store
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("DELETE FROM `store` WHERE s_id=:id;");
+            $sql = $conn->prepare("DELETE FROM `products` WHERE id=:id;");
             $sql->bindParam(':id', $id, PDO::PARAM_INT);
             // use exec() because no results are returned
             $sql->execute();
@@ -127,9 +125,9 @@ class store
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
             if ($name == "") {
-                $sql = $conn->prepare("SELECT * FROM `store`;");
+                $sql = $conn->prepare("SELECT * FROM `products`;");
             } else {
-                $sql = $conn->prepare("SELECT * FROM `store` s WHERE s.s_name like :name;");
+                $sql = $conn->prepare("SELECT * FROM `products` p WHERE p.name like :name;");
                 $name = '%' . $name . '%';
                 $sql->bindParam(':name', $name, PDO::PARAM_STR);
             }
@@ -155,7 +153,7 @@ class store
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
 
-            $sql = $conn->prepare("SELECT * FROM `store` s WHERE s_id = :id;");
+            $sql = $conn->prepare("SELECT * FROM `products` p WHERE id = :id;");
             $sql->bindParam(':id', $id);
 
 
@@ -181,7 +179,7 @@ class store
             // echo "Connected successfully";
             $limit = (int) $limit;
             $offset = (int) $offset;
-            $sql = $conn->prepare("SELECT * FROM `store` LIMIT :limit OFFSET :offset ;");
+            $sql = $conn->prepare("SELECT * FROM `products` LIMIT :limit OFFSET :offset ;");
             $sql->bindParam(':limit',  $limit, PDO::PARAM_INT); // for int value
             $sql->bindParam(':offset', $offset, PDO::PARAM_INT);
 
@@ -221,7 +219,7 @@ class store
         $conn = null;
     }
     // return the number of records in store table
-    public function storesCount()
+    public function ProductsCount()
     {
         try {
             $db = new Database;
@@ -242,7 +240,7 @@ class store
     }
 
     // return the number of records in store table based on category
-    public function storesCountPerCat($catId)
+    public function ProductsCountPerCat($catId)
     {
         try {
             $db = new Database;

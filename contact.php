@@ -36,17 +36,26 @@
     <div class="contact-area d-flex align-items-center">
 
         <div class="google-map">
-            <div id="googleMap"></div>
+            <!-- <div id="googleMap"></div> -->
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10197.887736011857!2d34.44497859941464!3d31.51520908015874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14fd7f6da60313a7%3A0x54fb4f8aaad1e63b!2sMetro%20Market!5e0!3m2!1sen!2s!4v1688679688433!5m2!1sen!2s" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
         <div class="contact-info">
-            <h2>How to Find Us</h2>
-            <p>Mauris viverra cursus ante laoreet eleifend. Donec vel fringilla ante. Aenean finibus velit id urna vehicula, nec maximus est sollicitudin.</p>
-
-            <div class="contact-address mt-50">
-                <p><span>address:</span> 10 Suffolk st Soho, London, UK</p>
-                <p><span>telephone:</span> +12 34 567 890</p>
-                <p><a href="mailto:contact@essence.com">contact@essence.com</a></p>
+            <h2>Send Us A Message</h2>
+            <div>
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email">
+                        <p id="emailHelp" class="form-text fs-6 fw-light" style="font-size: 12px;">We'll never share your email with anyone else.</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Your Message</label>
+                        <textarea name="message" id="message" class="form-control" style="height: 200px;"></textarea>
+                    </div>
+                    <button type="submit" name="submitBtn" class="btn btn-success">Send</button>
+                    <button type="reset" class="btn btn-danger">Reset</button>
+                </form>
             </div>
         </div>
 
