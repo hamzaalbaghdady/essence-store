@@ -43,7 +43,7 @@ class product
         $conn = null;
     }
 
-    function valilledImg($Files, $name)
+    function valilledImg($Files, $name, $cover)
     {
         $array = array();
         //$Files['name'] to get number of uploaded files
@@ -71,7 +71,9 @@ class product
             if ($uploadOk == 1) {
                 $fileNewName = $name . " (" . $num . ")" . strval(time() + rand(1, 10000)) . ".$fileExt";
                 $uploadPath = "uploads/" . $fileNewName;
-                $array[] = $uploadPath;
+                if ($cover == $fileName) {
+                    $array['cover'] = $uploadPath;
+                } else array_push($array, $uploadPath);
                 move_uploaded_file($file_tmp, $uploadPath);
                 echo "file number $num has been uploaded successfully!";
             }

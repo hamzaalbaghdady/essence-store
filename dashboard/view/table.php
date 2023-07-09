@@ -59,6 +59,11 @@ $product = new product;
             max-height: 500px !important;
         }
 
+        .x::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
         table {
             text-align: center;
         }

@@ -82,6 +82,7 @@ require_once "../model/brandClass.php";
                         $colors = $_POST['colors'];
                         $brand = $_POST['brand'];
                         $files = $_FILES['files'];
+                        $cover_img = $_POST['cover'];
                         $description = $_POST['description'];
                         $btn = $_POST['submitBtn'];
                         if (isset($btn)) {
@@ -89,7 +90,7 @@ require_once "../model/brandClass.php";
                                 echo "Fill all the fields!";
                             $product = new product();
                             $colors = json_encode($colors);
-                            $files = $product->valilledImg($files, $name);
+                            $files = $product->valilledImg($files, $name, $cover_img);
                             $product->addProduct($name, $price, $quantity, $discount, $colors, $brand, $files, $description, $categories);
                         } else echo "Fill all the fields!";
                     }
