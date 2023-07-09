@@ -1,9 +1,16 @@
+<?php
+require_once "../model/brandClass.php";
+// session_start();
+// if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
+//     header('Location:login.php');
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>Edit Brand</title>
+    <title>Add Brand</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -57,21 +64,40 @@
             <!-- Navbar Start -->
             <?php include "files/header.php" ?>
             <!-- Navbar End -->
+            <!-- php -->
+            <div class="container mt-5 d-flex justify-content-center">
+                <div class="alert alert-success" role="alert">
+                    <?php
+                    // add new product
+                    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                        $name = $_POST['name'];
+                        $btn = $_POST['submitBtn'];
+                        if (isset($btn)) {
+                            if (empty($name))
+                                echo "Fill all the fields!";
+                            $brand = new Brand;
+                            $brand->addBrand($name);
+                        } else echo "Fill all the fields!";
+                    } else echo "Sorry you are not allowed here!";
 
+                    ?>
+                </div>
+            </div>
+            <!-- php -->
 
             <!-- Form Start -->
             <div class="container-fluid pt-4 px-4 ">
                 <div class="col-sm-12 col-xl-6 mx-auto w-75">
                     <div class="bg-secondary rounded h-100 p-4">
-                        <h6 class="mb-4">Edit Brand</h6>
+                        <h6 class="mb-4">Add New Brand</h6>
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name">
+                                <input type="text" class="form-control" id="name" name="name">
 
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="submit" name="submitBtn" class="btn btn-primary">Add</button>
                             <button type="reset" class="btn btn-primary">Cancle</button>
                         </form>
                     </div>

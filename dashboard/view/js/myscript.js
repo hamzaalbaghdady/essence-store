@@ -11,6 +11,7 @@ function handleImageSelection(radioButton) {
   // Add the 'selected' class to the image div containing the selected radio button
   imageDiv.classList.add("selected");
 }
+
 // ********************
 // for get selected categories
 function handleItemSelection() {
@@ -31,7 +32,7 @@ function handleItemSelection() {
     badgeContainer.appendChild(badge);
   }
 }
-
+// create badge for selected categories
 function createBadge(value) {
   var badge = document.createElement("span");
   badge.className = "badge badge-primary";
@@ -62,7 +63,6 @@ function createBadge(value) {
 }
 
 // for get selected colors
-
 function handleColorsSelection() {
   var selectElement = document.getElementById("colors");
   var selectedOptions = selectElement.selectedOptions;
@@ -81,7 +81,7 @@ function handleColorsSelection() {
     badgeContainer.appendChild(color);
   }
 }
-
+// create badges for selected colors
 function createColor(value) {
   var badge = document.createElement("span");
   badge.className = "color badge badge-primary";
@@ -95,7 +95,6 @@ function createColor(value) {
 }
 
 // handle the file input
-
 function handleFileSelect(event) {
   var fileInput = event.target;
   var files = fileInput.files;
@@ -108,7 +107,7 @@ function handleFileSelect(event) {
   imageContainer.appendChild(document.createElement("br"));
   //
 
-  for (var i = 0; i < files.length; i++) {
+  for (let i = 0; i < files.length; i++) {
     var file = files[i];
 
     var reader = new FileReader();
@@ -121,12 +120,12 @@ function handleFileSelect(event) {
 
         var imageElement = document.createElement("img");
         imageElement.src = imageUrl;
-        imageElement.alt = "xxx";
+        imageElement.alt = file.name; // Access the image name file.name
 
         var radioButton = document.createElement("input");
         radioButton.type = "radio";
         radioButton.name = "cover";
-        radioButton.value = i + 1;
+        radioButton.value = file.name;
         radioButton.onchange = function () {
           handleImageSelection(this);
         };

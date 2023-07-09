@@ -1,3 +1,13 @@
+<?php
+require_once "../model/productClass.php";
+require_once "../model/categoryClass.php";
+require_once "../model/brandClass.php";
+// session_start();
+// if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
+//     header('Location:login.php');
+// }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,6 +68,37 @@
             <?php include "files/header.php" ?>
             <!-- Navbar End -->
 
+            <!-- php -->
+            <div class="container mt-5 d-flex justify-content-center">
+                <div class="alert alert-success" role="alert">
+                    <?php
+                    // add new product
+                    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                        $name = $_POST['name'];
+                        $price = $_POST['price'];
+                        $quantity = $_POST['quantity'];
+                        $discount = $_POST['discount'];
+                        $categories = $_POST['categories'];
+                        $colors = $_POST['colors'];
+                        $brand = $_POST['brand'];
+                        $files = $_FILES['files'];
+                        $cover_img = $_POST['cover'];
+                        $description = $_POST['description'];
+                        $btn = $_POST['submitBtn'];
+                        if (isset($btn)) {
+                            if (empty($name) || empty($price) || empty($quantity) || empty($categories) || empty($colors) || empty($brand) || empty($files))
+                                echo "Fill all the fields!";
+                            $product = new product();
+                            $colors = json_encode($colors);
+                            $files = $product->valilledImg($files, $name);
+                            $product->addProduct($name, $price, $quantity, $discount, $colors, $brand, $files, $description, $categories);
+                        } else echo "Fill all the fields!";
+                    }
+
+                    ?>
+                </div>
+            </div>
+            <!-- php -->
 
             <!-- Form Start -->
             <div class="container-fluid pt-4 px-4 ">
@@ -86,9 +127,13 @@
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="item-select" class="form-label">Select categories</label>
                                     <select class="form-select mb-2" id="item-select" name="categories[]" multiple onchange="handleItemSelection()">
-                                        <option value="1" title="One">One</option>
-                                        <option value="2" title="Two">Two</option>
-                                        <option value="3" title="Three">Three</option>
+                                        <?php
+                                        $category = new category;
+                                        $array = $category->search();
+                                        foreach ($array as $cat) {
+                                            echo "<option value='$cat[id]' title='$cat[name]'>$cat[name]</option>";
+                                        }
+                                        ?>
                                     </select>
                                     <div id="badge-container"></div>
                                 </div>
@@ -112,9 +157,13 @@
                                     <label for="brand" class="form-label">Select a brand</label>
                                     <select class="form-select mb-2" name="brand" id="brand">
                                         <option selected>Select a brand</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                        <?php
+                                        $brand = new Brand;
+                                        $result = $brand->search();
+                                        foreach ($result as $val) {
+                                            echo "<option value='$val[name]'>$val[name]</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
 

@@ -2,11 +2,11 @@
 <?php
 require_once "database.php";
 
-class store
+class product
 {
 
     // add store to database, no return value
-    public function addProduct($name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $cat_no)
+    public function addProduct($name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $categories)
     {
         try {
             $db = new Database;
@@ -15,27 +15,68 @@ class store
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
             $sql = $conn->prepare("INSERT INTO `products`(`name`, `price`, `quantity`, `discount`, `colors`, `brand`, `description`, `images_src`)
-             VALUES (':name',':price',':quan',':discount',':colors',':brand',':descr',':src');");
+             VALUES (:name,:price,:quan,:discount,:colors,:brand,:descr,:src);");
             // parameters
             $sql->bindParam(':name', $name);
-            $sql->bindParam(':price', $price, pdo::PARAM_INT);
-            $sql->bindParam(':quan', $quntity, pdo::PARAM_INT);
-            $sql->bindParam(':discount', $discount, pdo::PARAM_INT);
+            $sql->bindParam(':price', $price);
+            $sql->bindParam(':quan', $quntity);
+            $sql->bindParam(':discount', $discount);
             $sql->bindParam(':colors', $colors);
             $sql->bindParam(':brand', $brand);
             $sql->bindParam(':descr', $description);
             $sql->bindParam(':src', $images_src);
             // execution
             $sql->execute();
-            $sql2 = $conn->prepare("INSERT INTO `product_category`(`product_id`, `category_id`) VALUES (LAST_INSERT_ID(), :cid);");
-            $sql2->bindParam(':cid', $cat_no, pdo::PARAM_INT);
-            $sql2->execute();
+            $last_id = $conn->lastInsertId();
+            // begin the transaction
+            $conn->beginTransaction();
+            foreach ($categories as $cat) {
+                $conn->exec("INSERT INTO `product_category`(`product_id`, `category_id`) VALUES ($last_id, $cat);");
+            }
+            // commit the transaction
+            $conn->commit();
 
             echo "New record created successfully";
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
         }
         $conn = null;
+    }
+
+    function valilledImg($Files, $name)
+    {
+        $array = array();
+        //$Files['name'] to get number of uploaded files
+        foreach ($Files['name'] as $num => $file) {
+            $fileName = $Files['name'][$num];
+            $fileSize = $Files['size'][$num];
+            $file_tmp = $Files['tmp_name'][$num];
+            $fileType = $Files['type'][$num];
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $uploadOk = 1;
+            // Check file size
+            if ($fileSize > 500000) {
+                echo "Sorry, your file is too large. file name = $fileName";
+                $uploadOk = 0;
+            }
+
+            // Allow certain file formats
+            if (
+                $fileExt != "jpg" && $fileExt != "png" && $fileExt != "jpeg" && $fileExt != "gif"
+            ) {
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
+
+            if ($uploadOk == 1) {
+                $fileNewName = $name . " (" . $num . ")" . strval(time() + rand(1, 10000)) . ".$fileExt";
+                $uploadPath = "uploads/" . $fileNewName;
+                $array[] = $uploadPath;
+                move_uploaded_file($file_tmp, $uploadPath);
+                echo "file number $num has been uploaded successfully!";
+            }
+        }
+        return json_encode($array);
     }
 
     // edit store in database, no return value
@@ -78,7 +119,7 @@ class store
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("UPDATE `store` s SET `rate`=:rate WHERE s.s_id=:id");
+            $sql = $conn->prepare("UPDATE `products` s SET `rate`=:rate WHERE s.s_id=:id");
             // parameters
             $sql->bindParam(':id', $id);
             $sql->bindParam(':rate', $rate);

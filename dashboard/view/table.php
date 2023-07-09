@@ -1,3 +1,16 @@
+<?php
+require_once "../model/productClass.php";
+require_once "../model/categoryClass.php";
+require_once "../model/brandClass.php";
+// session_start();
+// if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
+//     header('Location:login.php');
+// }
+$brand = new Brand;
+$category = new Category;
+$product = new product;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,6 +57,10 @@
         .x {
             overflow-y: scroll;
             max-height: 500px !important;
+        }
+
+        table {
+            text-align: center;
         }
     </style>
 
@@ -187,45 +204,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>shoes</td>
-                                            <td>50$</td>
-                                            <td>0</td>
-                                            <td>15</td>
-                                            <td>4</td>
-                                            <td>Nike</td>
-                                            <td>shoes, men</td>
-                                            <td>7/6/2023</td>
-                                            <td>black, red, blue</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>shoes</td>
-                                            <td>50$</td>
-                                            <td>0</td>
-                                            <td>15</td>
-                                            <td>4</td>
-                                            <td>Nike</td>
-                                            <td>shoes, men</td>
-                                            <td>7/6/2023</td>
-                                            <td>black, red, blue</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>shoes</td>
-                                            <td>50$</td>
-                                            <td>0</td>
-                                            <td>15</td>
-                                            <td>4</td>
-                                            <td>Nike</td>
-                                            <td>shoes, men</td>
-                                            <td>7/6/2023</td>
-                                            <td>black, red, blue</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                        </tr>
+                                        <?php
+                                        $p_result = $product->search();
+                                        foreach ($p_result as $val) {
+
+                                            $cats = $category->getCatByProductID($val['id']);
+                                            $categories = array_column($cats, 'name'); // to convert assoc_array to Indexed_array
+                                            $categories_Json = empty($categories) ? 'Null' : json_encode($categories); // convert array to json
+
+                                            echo "<tr>
+                                                <td>$val[id]</td>
+                                                <td>$val[name]</td>
+                                                <td>$val[price]$</td>
+                                                <td>$val[discount]</td>
+                                                <td>$val[quantity]</td>
+                                                <td>$val[rate]</td>
+                                                <td>$val[brand]</td>
+                                                <td>$categories_Json</td>
+                                                <td>$val[date_of_additon]</td>
+                                                <td>$val[colors]</td>
+                                                <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> <a href='../model/deleteProduct.php?id=$val[id]'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
+                                                </tr>";
+                                        }
+                                        ?>
+
 
                                     </tbody>
                                 </table>
@@ -253,24 +255,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>sheos</td>
-                                        <td>5</td>
-                                        <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>sheos</td>
-                                        <td>9</td>
-                                        <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>sheos</td>
-                                        <td>3</td>
-                                        <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                    </tr>
+                                    <?php
+                                    $c_result = $category->search();
+                                    foreach ($c_result as $val) {
+                                        echo "<tr>
+                                            <th>$val[id]</th>
+                                            <td>$val[name]</td>
+                                            <td>0</td>
+                                            <td><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i> <i class='fa-solid fa-trash-can me-2' title='Delete'></i></td>
+                                            </tr>";
+                                    }
+                                    ?>
 
                                 </tbody>
                             </table>
@@ -290,25 +285,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Nike</td>
-                                        <td>8</td>
-                                        <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Nike</td>
-                                        <td>5</td>
-                                        <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Nike</td>
-                                        <td>6</td>
-                                        <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i></td>
-                                    </tr>
-
+                                    <?php
+                                    $b_result = $brand->search();
+                                    foreach ($b_result as $val) {
+                                        echo "<tr>
+                                            <th>$val[id]</th>
+                                            <td>$val[name]</td>
+                                            <td>0</td>
+                                            <td><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i> <i class='fa-solid fa-trash-can me-2' title='Delete'></i></td>
+                                            </tr>";
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>

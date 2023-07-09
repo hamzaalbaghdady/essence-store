@@ -1,3 +1,10 @@
+<?php
+require_once "../model/categoryClass.php";
+// session_start();
+// if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
+//     header('Location:login.php');
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,7 +63,27 @@
             <!-- Navbar Start -->
             <?php include "files/header.php" ?>
             <!-- Navbar End -->
+            <!-- php -->
+            <div class="container mt-5 d-flex justify-content-center">
+                <div class="alert alert-success" role="alert">
+                    <?php
+                    // add new product
+                    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                        $name = $_POST['name'];
+                        $id = $_GET['id'];
+                        $btn = $_POST['submitBtn'];
+                        if (isset($btn)) {
+                            if (empty($name))
+                                echo "Fill all the fields!";
+                            $category = new Category;
+                            $category->editCat($id, $name);
+                        } else echo "Fill all the fields!";
+                    } else echo "Sorry you are not allowed here!";
 
+                    ?>
+                </div>
+            </div>
+            <!-- php -->
 
             <!-- Form Start -->
             <div class="container-fluid pt-4 px-4 ">
@@ -66,11 +93,11 @@
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name">
+                                <input type="text" class="form-control" id="name" name="name">
 
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="submit" name="submitBtn" class="btn btn-primary">Edit</button>
                             <button type="reset" class="btn btn-primary">Cancle</button>
                         </form>
                     </div>
