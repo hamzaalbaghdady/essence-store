@@ -282,8 +282,8 @@ class product
         $conn = null;
     }
 
-    // return the number of records in store table based on category
-    public function ProductsCountPerCat($catId)
+    // returns an array of products based on category
+    public function ProductsPerCategory($catId)
     {
         try {
             $db = new Database;
@@ -291,12 +291,38 @@ class product
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("SELECT COUNT(s_id) as count FROM `store` WHERE cat_no=:catId;");
-            $sql->bindParam(':catId', $catId);
+            $sql = $conn->prepare("SELECT p.id, p.name, p.price, p.quantity, p.discount, p.rate, p.colors, p.date_of_additon, p.brand, p.description, p.images_src, c.name AS 'c_name'
+            FROM products p
+            JOIN product_category pc ON p.id = pc.product_id
+            JOIN categories c ON pc.category_id = c.id
+            WHERE c.id = :id;");
+            $sql->bindParam(':id', $catId);
             $sql->execute();
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $sql->fetch();
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Connection failed: " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+
+    // returns an array of products based on Brand name
+    public function ProductsPerBrand($brandName)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // echo "Connected successfully";
+            $sql = $conn->prepare("SELECT * FROM `products` p WHERE p.brand=:name;");
+            $sql->bindParam(':name', $brandName);
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();

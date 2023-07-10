@@ -1,8 +1,9 @@
 <?php
+session_start();
+
 require_once "../model/productClass.php";
 require_once "../model/categoryClass.php";
 require_once "../model/brandClass.php";
-// session_start();
 // if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
 //     header('Location:login.php');
 // }
@@ -45,6 +46,8 @@ $product = new product;
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- sweet alert -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
         td .fa-solid {
             color: #EB1616;
@@ -228,7 +231,7 @@ $product = new product;
                                                 <td>$categories_Json</td>
                                                 <td>$val[date_of_additon]</td>
                                                 <td>$val[colors]</td>
-                                                <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> <a href='../model/deleteProduct.php?id=$val[id]'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
+                                                <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> <a href='../controller/deleteProduct.php?id=$val[id]'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
                                                 </tr>";
                                         }
                                         ?>
@@ -263,14 +266,18 @@ $product = new product;
                                     <?php
                                     $c_result = $category->search();
                                     foreach ($c_result as $val) {
+                                        $c_count = count($product->ProductsPerCategory($val['id']));
+                                        $delete = ($c_count > 0) ? "alert_error()" : "alert_confirm($val[id])";
                                         echo "<tr>
                                             <th>$val[id]</th>
                                             <td>$val[name]</td>
-                                            <td>0</td>
-                                            <td><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i> <i class='fa-solid fa-trash-can me-2' title='Delete'></i></td>
+                                            <td>$c_count</td>
+                                            <td><a href='editCategory.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a>
+                                            <a onclick='$delete'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
                                             </tr>";
                                     }
                                     ?>
+
 
                                 </tbody>
                             </table>
@@ -293,11 +300,12 @@ $product = new product;
                                     <?php
                                     $b_result = $brand->search();
                                     foreach ($b_result as $val) {
+                                        $b_count = count($product->ProductsPerBrand($val['name']));
                                         echo "<tr>
                                             <th>$val[id]</th>
                                             <td>$val[name]</td>
-                                            <td>0</td>
-                                            <td><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i> <i class='fa-solid fa-trash-can me-2' title='Delete'></i></td>
+                                            <td>$b_count</td>
+                                            <td><a href='editBrand.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> <a href='../controller/deleteBrand.php?id=$val[id]'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
                                             </tr>";
                                     }
                                     ?>
@@ -336,8 +344,43 @@ $product = new product;
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        function alert_confirm(id) {
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '../controller/deleteCategory.php?id=' + id;
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            })
+        }
+
+        function alert_error() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You can not delet a category with any product. ',
+            })
+        }
+    </script>
+    <!--JavaScript Libraries-->
+
+    <!-- sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
+
+    <script script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/chart/chart.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>

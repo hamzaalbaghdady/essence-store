@@ -50,6 +50,7 @@ class Category
     public function deleteCat($id)
     {
         try {
+            $status = true;
             $db = new Database;
             $conn = $db->conn;
             // set the PDO error mode to exception
@@ -62,8 +63,10 @@ class Category
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
+            $status = false;
         }
         $conn = null;
+        return $status;
     }
 
     /*

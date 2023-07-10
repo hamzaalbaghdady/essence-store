@@ -86,13 +86,15 @@ require_once "../model/brandClass.php";
                         $description = $_POST['description'];
                         $btn = $_POST['submitBtn'];
                         if (isset($btn)) {
-                            if (empty($name) || empty($price) || empty($quantity) || empty($categories) || empty($colors) || empty($brand) || empty($files))
+                            if (empty($name) || empty($price) || empty($quantity) || empty($categories) || empty($colors) || empty($brand) || empty($files)) {
                                 echo "Fill all the fields!";
-                            $product = new product();
-                            $colors = json_encode($colors);
-                            $files = $product->valilledImg($files, $name, $cover_img);
-                            $product->addProduct($name, $price, $quantity, $discount, $colors, $brand, $files, $description, $categories);
-                        } else echo "Fill all the fields!";
+                            } else {
+                                $product = new product();
+                                $colors = json_encode($colors);
+                                $files = $product->valilledImg($files, $name, $cover_img);
+                                $product->addProduct($name, $price, $quantity, $discount, $colors, $brand, $files, $description, $categories);
+                            }
+                        }
                     }
 
                     ?>
@@ -109,24 +111,24 @@ require_once "../model/brandClass.php";
                             <div class="row g-4">
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="name" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name">
+                                    <input type="text" class="form-control" id="name" name="name" required>
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="price" class="form-label">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price">
+                                    <input type="number" class="form-control" id="price" name="price" required>
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="quantity" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity">
+                                    <input type="number" class="form-control" id="quantity" name="quantity" required>
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="discount" class="form-label">Discount</label>
-                                    <input type="number" class="form-control" id="discount" name="discount">
+                                    <input type="number" class="form-control" id="discount" name="discount" required>
                                 </div>
 
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="item-select" class="form-label">Select categories</label>
-                                    <select class="form-select mb-2" id="item-select" name="categories[]" multiple onchange="handleItemSelection()">
+                                    <select class="form-select mb-2" id="item-select" name="categories[]" multiple onchange="handleItemSelection()" required>
                                         <?php
                                         $category = new category;
                                         $array = $category->search();
@@ -139,7 +141,7 @@ require_once "../model/brandClass.php";
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="colors" class="form-label">Select colors</label>
-                                    <select class="form-select mb-2" id="colors" name="colors[]" multiple onchange="handleColorsSelection()">
+                                    <select class="form-select mb-2" id="colors" name="colors[]" multiple onchange="handleColorsSelection()" required>
                                         <option value="aqua">aqua</option>
                                         <option value="red">red</option>
                                         <option value="green">green</option>
@@ -155,7 +157,7 @@ require_once "../model/brandClass.php";
 
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="brand" class="form-label">Select a brand</label>
-                                    <select class="form-select mb-2" name="brand" id="brand">
+                                    <select class="form-select mb-2" name="brand" id="brand" required>
                                         <option selected>Select a brand</option>
                                         <?php
                                         $brand = new Brand;
@@ -169,7 +171,7 @@ require_once "../model/brandClass.php";
 
                                 <div class="mb-3 col-sm-12 col-xl-6">
                                     <label for="file-input" class="form-label">Choose Product Images</label>
-                                    <input class="form-control bg-dark mb-3" type="file" name="files[]" id="file-input" accept="image/*" multiple>
+                                    <input class="form-control bg-dark mb-3" type="file" name="files[]" id="file-input" accept="image/*" multiple required>
                                     <div id="image-container"></div>
                                 </div>
 

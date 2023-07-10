@@ -68,6 +68,7 @@ require_once "../model/brandClass.php";
             <div class="container mt-5 d-flex justify-content-center">
                 <div class="alert alert-success" role="alert">
                     <?php
+                    $brand = new Brand;
                     // add new product
                     if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         $name = $_POST['name'];
@@ -76,11 +77,11 @@ require_once "../model/brandClass.php";
                         if (isset($btn)) {
                             if (empty($name))
                                 echo "Fill all the fields!";
-                            $brand = new Brand;
                             $brand->editBrand($id, $name);
                         } else echo "Fill all the fields!";
-                    } else echo "Sorry you are not allowed here!";
-
+                    }
+                    $id = isset($_GET['id']) ? $_GET['id'] : null;
+                    $result = $brand->search($id);
                     ?>
                 </div>
             </div>
@@ -94,7 +95,7 @@ require_once "../model/brandClass.php";
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name">
+                                <input type="text" class="form-control" id="name" name="name" value="<?= $result[0]['name'] ?>">
 
                             </div>
 

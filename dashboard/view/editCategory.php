@@ -67,18 +67,20 @@ require_once "../model/categoryClass.php";
             <div class="container mt-5 d-flex justify-content-center">
                 <div class="alert alert-success" role="alert">
                     <?php
-                    // add new product
+                    $category = new Category;
+                    // Update category
                     if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                        $name = $_POST['name'];
+                        $name = htmlspecialchars($_POST['name']);
                         $id = $_GET['id'];
                         $btn = $_POST['submitBtn'];
                         if (isset($btn)) {
                             if (empty($name))
                                 echo "Fill all the fields!";
-                            $category = new Category;
                             $category->editCat($id, $name);
                         } else echo "Fill all the fields!";
-                    } else echo "Sorry you are not allowed here!";
+                    }
+                    $id = isset($_GET['id']) ? $_GET['id'] : null;
+                    $result = $category->search($id);
 
                     ?>
                 </div>
@@ -93,7 +95,7 @@ require_once "../model/categoryClass.php";
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name">
+                                <input type="text" class="form-control" id="name" name="name" value="<?= $result[0]['name'] ?>">
 
                             </div>
 
