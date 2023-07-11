@@ -231,7 +231,9 @@ $product = new product;
                                                 <td>$categories_Json</td>
                                                 <td>$val[date_of_additon]</td>
                                                 <td>$val[colors]</td>
-                                                <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> <a href='../controller/deleteProduct.php?id=$val[id]'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
+                                                <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
+                                                <a onclick='alert_confirm(\"deleteProduct.php?id=$val[id]\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
+                                                <a href='../../single-product-details.php?id=$val[id]'><i class='fa-solid fa-eye' title='View'></i></a></td>
                                                 </tr>";
                                         }
                                         ?>
@@ -267,7 +269,7 @@ $product = new product;
                                     $c_result = $category->search();
                                     foreach ($c_result as $val) {
                                         $c_count = count($product->ProductsPerCategory($val['id']));
-                                        $delete = ($c_count > 0) ? "alert_error()" : "alert_confirm($val[id])";
+                                        $delete = ($c_count > 0) ? "alert_error()" : "alert_confirm(\"deleteCategory.php?id=$val[id]\")";
                                         echo "<tr>
                                             <th>$val[id]</th>
                                             <td>$val[name]</td>
@@ -305,7 +307,8 @@ $product = new product;
                                             <th>$val[id]</th>
                                             <td>$val[name]</td>
                                             <td>$b_count</td>
-                                            <td><a href='editBrand.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> <a href='../controller/deleteBrand.php?id=$val[id]'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
+                                            <td><a href='editBrand.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
+                                            <a onclick='alert_confirm(\"deleteBrand.php?id=$val[id]\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a></td>
                                             </tr>";
                                     }
                                     ?>
@@ -343,9 +346,8 @@ $product = new product;
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
-
     <script>
-        function alert_confirm(id) {
+        function alert_confirm(url) {
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -357,12 +359,12 @@ $product = new product;
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '../controller/deleteCategory.php?id=' + id;
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+                    window.location.href = '../controller/' + url;
+                    // Swal.fire(
+                    //     'Deleted!',
+                    //     'Your file has been deleted.',
+                    //     'success'
+                    // )
                 }
             })
         }
@@ -373,6 +375,26 @@ $product = new product;
                 title: 'Oops...',
                 text: 'You can not delet a category with any product. ',
             })
+        }
+
+        // Call the function when the page is loaded
+        window.addEventListener('DOMContentLoaded', alert_delete);
+
+        function alert_delete() {
+            const search = window.location.search;
+            if (search === '?deleted=true') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted',
+                    text: 'The item has been deleted successfully.',
+                })
+            } else if (search === '?deleted=false') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erorr',
+                    text: 'Erorr: The item was not deleted successfully!',
+                })
+            }
         }
     </script>
     <!--JavaScript Libraries-->

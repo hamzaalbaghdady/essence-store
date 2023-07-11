@@ -73,6 +73,11 @@ require_once "../model/brandClass.php";
                 <div class="alert alert-success" role="alert">
                     <?php
                     // add new product
+                    $product = new product();
+                    $id = isset($_GET['id']) ? $_GET['id'] : 0;
+                    // for view old data in inputs
+                    $data = $product->searchById($id);
+
                     if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         $name = $_POST['name'];
                         $price = $_POST['price'];
@@ -86,15 +91,42 @@ require_once "../model/brandClass.php";
                         $description = $_POST['description'];
                         $btn = $_POST['submitBtn'];
                         if (isset($btn)) {
-                            if (empty($name) || empty($price) || empty($quantity) || empty($categories) || empty($colors) || empty($brand) || empty($files))
+                            if (empty($name) || empty($price) || empty($quantity) || empty($categories) || empty($colors) || empty($brand) || empty($files)) {
                                 echo "Fill all the fields!";
-                            $product = new product();
-                            $colors = json_encode($colors);
-                            $files = $product->valilledImg($files, $name, $cover_img);
-                            $product->addProduct($name, $price, $quantity, $discount, $colors, $brand, $files, $description, $categories);
-                        } else echo "Fill all the fields!";
-                    }
+                            } else {
+                                $colors = json_encode($colors);
 
+                                $files = ($files == null) ? "" :  mergeJsonArrays($data['images_src'], $product->valilledImg($files, $name, $cover_img));
+                                $product->editProduct($id, $name, $price, $quantity, $discount, $colors, $brand, $files, $description, $categories);
+                            }
+                        }
+                    }
+                    // for view old data in inputs
+                    $data = $product->searchById($id);
+                    // take tow jsons and return one 
+                    function mergeJsonArrays($json1, $json2)
+                    {
+
+                        // Decode the JSON data into associative arrays
+                        $array1 = json_decode($json1, true);
+                        $array2 = json_decode($json2, true);
+                        if (isset($array2['cover'])) {
+                            if (isset($array1['cover'])) {
+                                $cover = $array1['cover'];
+                                unset($array1['cover']);
+                                array_push($array1, $cover);
+                            }
+                        }
+
+
+                        // Merge the arrays
+                        $mergedArray = array_merge($array1, $array2);
+
+                        // Encode the merged array back to JSON
+                        $mergedJsonData = json_encode($mergedArray);
+
+                        return $mergedJsonData;
+                    }
                     ?>
                 </div>
             </div>
@@ -109,59 +141,91 @@ require_once "../model/brandClass.php";
                             <div class="row g-4">
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="name" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name">
+                                    <input type="text" class="form-control" id="name" name="name" required value="<?= $data['name'] ?>">
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="price" class="form-label">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price">
+                                    <input type="number" class="form-control" id="price" name="price" required value="<?= $data['price'] ?>">
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="quantity" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity">
+                                    <input type="number" class="form-control" id="quantity" name="quantity" required value="<?= $data['quantity'] ?>">
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="discount" class="form-label">Discount</label>
-                                    <input type="number" class="form-control" id="discount" name="discount">
+                                    <input type="number" class="form-control" id="discount" name="discount" required value="<?= $data['discount'] ?>">
                                 </div>
 
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="item-select" class="form-label">Select categories</label>
-                                    <select class="form-select mb-2" id="item-select" name="categories[]" multiple onchange="handleItemSelection()">
+                                    <select class="form-select mb-2" id="item-select" name="categories[]" required multiple onchange="handleItemSelection()">
                                         <?php
                                         $category = new category;
                                         $array = $category->search();
+                                        $selected_cats = $category->getCatByProductID($data['id']);
+                                        print_r($selected_cats);
                                         foreach ($array as $cat) {
-                                            echo "<option value='$cat[id]' title='$cat[name]'>$cat[name]</option>";
+                                            if (in_array($cat['name'], array_column($selected_cats, 'name'))) {
+                                                echo "<option value='$cat[id]' title='$cat[name]' selected>$cat[name]</option>";
+                                            } else
+                                                echo "<option value='$cat[id]' title='$cat[name]'>$cat[name]</option>";
                                         }
                                         ?>
                                     </select>
-                                    <div id="badge-container"></div>
+                                    <div id="badge-container">
+                                        <?php
+
+                                        foreach ($selected_cats as $val) {
+                                            echo "
+                                            <span class='badge badge-primary'>
+                                            <span>$val[name]</span>
+                                            <span class='badge-close'>&times;</span>
+                                        </span>";
+                                        }
+                                        ?>
+
+                                    </div>
                                 </div>
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="colors" class="form-label">Select colors</label>
-                                    <select class="form-select mb-2" id="colors" name="colors[]" multiple onchange="handleColorsSelection()">
-                                        <option value="aqua">aqua</option>
-                                        <option value="red">red</option>
-                                        <option value="green">green</option>
-                                        <option value="black">black</option>
-                                        <option value="white">white</option>
-                                        <option value="yellow">yellow</option>
-                                        <option value="blue">blue</option>
-                                        <option value="gray">gray</option>
-                                        <option value="transparent">Other</option>
+                                    <select class="form-select mb-2" id="colors" name="colors[]" required multiple onchange="handleColorsSelection()">
+                                        <?php
+                                        $myColors = ["aqua", "red", "green", "black", "white", "yellow", "blue", "gray"];
+                                        $selected_colors = json_decode($data['colors']);
+                                        foreach ($myColors as $val) {
+                                            if (in_array($val, $selected_colors))
+                                                echo "<option value='$val' selected>$val</option>";
+                                            else echo "<option value='$val'>$val</option>";
+                                        }
+                                        ?>
+
                                     </select>
-                                    <div id="colors-container"></div>
+                                    <div id="colors-container">
+                                        <?php
+                                        foreach ($selected_colors as $val) {
+                                            echo "
+                                                <span class='color badge badge-primary' style='background-color: $val;'>
+                                                <span></span>
+                                                </span>";
+                                        }
+                                        ?>
+
+                                    </div>
                                 </div>
 
                                 <div class="mb-2 col-sm-12 col-xl-6">
                                     <label for="brand" class="form-label">Select a brand</label>
-                                    <select class="form-select mb-2" name="brand" id="brand">
+                                    <select class="form-select mb-2" name="brand" id="brand" required>
                                         <option selected>Select a brand</option>
                                         <?php
                                         $brand = new Brand;
                                         $result = $brand->search();
                                         foreach ($result as $val) {
-                                            echo "<option value='$val[name]'>$val[name]</option>";
+                                            $selected_brand = $data['brand'];
+                                            if ($selected_brand == $val['name'])
+                                                echo "<option value='$val[name]' selected>$val[name]</option>";
+                                            else
+                                                echo "<option value='$val[name]'>$val[name]</option>";
                                         }
                                         ?>
                                     </select>
@@ -170,14 +234,27 @@ require_once "../model/brandClass.php";
                                 <div class="mb-3 col-sm-12 col-xl-6">
                                     <label for="file-input" class="form-label">Choose Product Images</label>
                                     <input class="form-control bg-dark mb-3" type="file" name="files[]" id="file-input" accept="image/*" multiple>
-                                    <div id="image-container"></div>
+                                    <div id="image-container">
+                                        <label>Choose the cover image</label><br>
+                                        <?php
+                                        $images = json_decode($data['images_src'], true);
+                                        foreach ($images as $key => $val) {
+                                            $selected_img = ($key == "cover") ? "checked" : "";
+                                            echo "
+                                            <div class='radio-image'>
+                                            <img src='$val' alt='$val'>
+                                            <input type='radio' name='cover' value='$val' $selected_img>
+                                        </div>";
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
 
                             </div>
 
                             <div class="mb-3 ">
                                 <label for="description" class="form-label">Write a brief description</label>
-                                <textarea name="description" class="form-control bg-dark" id="description"></textarea>
+                                <textarea name="description" class="form-control bg-dark" id="description"><?= $data['description'] ?></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary" name="submitBtn">Edit</button>

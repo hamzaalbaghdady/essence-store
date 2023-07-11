@@ -28,6 +28,7 @@ class Category
     public function editCat($id, $name)
     {
         try {
+            $status = 'true';
             $db = new Database;
             $conn = $db->conn;
             // set the PDO error mode to exception
@@ -42,15 +43,17 @@ class Category
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
+            $status = 'false';
         }
         $conn = null;
+        return $status;
     }
 
     // delete  category in database
     public function deleteCat($id)
     {
         try {
-            $status = true;
+            $status = 'true';
             $db = new Database;
             $conn = $db->conn;
             // set the PDO error mode to exception
@@ -63,7 +66,7 @@ class Category
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
-            $status = false;
+            $status = 'false';
         }
         $conn = null;
         return $status;
@@ -109,7 +112,7 @@ class Category
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
 
-            $sql = $conn->prepare("SELECT c.name 
+            $sql = $conn->prepare("SELECT c.name, pc.id, pc.category_id, pc.product_id 
             FROM products p
             JOIN product_category pc ON p.id = pc.product_id
             JOIN categories c ON pc.category_id = c.id WHERE p.id=:id;");

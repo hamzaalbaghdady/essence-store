@@ -76,7 +76,7 @@ require_once "../model/categoryClass.php";
                         if (isset($btn)) {
                             if (empty($name))
                                 echo "Fill all the fields!";
-                            $category->editCat($id, $name);
+                            $status = $category->editCat($id, $name);
                         } else echo "Fill all the fields!";
                     }
                     $id = isset($_GET['id']) ? $_GET['id'] : null;
@@ -133,7 +133,25 @@ require_once "../model/categoryClass.php";
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+    <script>
+        function alert_update(status) {
+            // const search = window.location.search;
+            if (status) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated',
+                    text: 'The category has been updated successfully.',
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erorr',
+                    text: 'Erorr: The category was not updated successfully!',
+                })
+            }
 
+        }
+    </script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

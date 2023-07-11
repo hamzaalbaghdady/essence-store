@@ -27,6 +27,7 @@ class product
             $sql->bindParam(':src', $images_src);
             // execution
             $sql->execute();
+            // adding categories
             $last_id = $conn->lastInsertId();
             // begin the transaction
             $conn->beginTransaction();
@@ -56,7 +57,7 @@ class product
             $uploadOk = 1;
             // Check file size
             if ($fileSize > 500000) {
-                echo "Sorry, your file is too large. file name = $fileName";
+                echo "Sorry, your file is too large. file name = $fileName <br>";
                 $uploadOk = 0;
             }
 
@@ -64,7 +65,7 @@ class product
             if (
                 $fileExt != "jpg" && $fileExt != "png" && $fileExt != "jpeg" && $fileExt != "gif"
             ) {
-                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.<br>";
                 $uploadOk = 0;
             }
 
@@ -72,17 +73,17 @@ class product
                 $fileNewName = $name . " (" . $num . ")" . strval(time() + rand(1, 10000)) . ".$fileExt";
                 $uploadPath = "uploads/" . $fileNewName;
                 if ($cover == $fileName) {
-                    $array['cover'] = $uploadPath;
+                    $array['cover'] = $uploadPath; // get cover image
                 } else array_push($array, $uploadPath);
                 move_uploaded_file($file_tmp, $uploadPath);
-                echo "file number $num has been uploaded successfully!";
+                echo "file number $num has been uploaded successfully! <br>";
             }
         }
         return json_encode($array);
     }
 
     // edit store in database, no return value
-    public function editProduct($id, $name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $cat_no)
+    public function editProduct($id, $name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $categories)
     {
         try {
             $db = new Database;
@@ -103,8 +104,23 @@ class product
             $sql->bindParam(':descr', $description);
             $sql->bindParam(':src', $images_src);
             // execution
-
             $sql->execute();
+
+            // updating categories
+            // first delete all records for product id
+            $sql2 = $conn->prepare("DELETE FROM `product_category` WHERE product_id=:pid;");
+            $sql2->bindParam(':pid', $id, pdo::PARAM_INT);
+            $sql2->execute();
+
+            // then adding the new records 
+            $conn->beginTransaction();
+            foreach ($categories as $cat) {
+                $sql3 = $conn->prepare("INSERT INTO `product_category`(`product_id`, `category_id`) VALUES (:pid, $cat);");
+                $sql3->bindParam(':pid', $id, pdo::PARAM_INT);
+                $sql3->execute();
+            }
+            // commit the transaction
+            $conn->commit();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
@@ -139,6 +155,7 @@ class product
     public function deleteProduct($id)
     {
         try {
+            $status = 'true';
             $db = new Database;
             $conn = $db->conn;
             // set the PDO error mode to exception
@@ -151,8 +168,10 @@ class product
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
+            $status = 'false';
         }
         $conn = null;
+        return $status;
     }
 
     /*
@@ -290,7 +309,6 @@ class product
             $conn = $db->conn;
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // echo "Connected successfully";
             $sql = $conn->prepare("SELECT p.id, p.name, p.price, p.quantity, p.discount, p.rate, p.colors, p.date_of_additon, p.brand, p.description, p.images_src, c.name AS 'c_name'
             FROM products p
             JOIN product_category pc ON p.id = pc.product_id
