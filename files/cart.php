@@ -1,7 +1,18 @@
+<?php
+require_once "dashboard/model/cartClass.php";
+require_once "dashboard/model/productClass.php";
+$cart = new Cart;
+$product = new product;
+$user_id = 1; // TODO
+$items = $cart->getCartItems($user_id);
+
+?>
+
 <head>
     <style>
         .fa-close {
             font-size: 20px;
+            cursor: pointer;
         }
 
         .fa-close:hover {
@@ -15,60 +26,53 @@
 
     <!-- Cart Button -->
     <div class="cart-button">
-        <a href="#" id="rightSideCart"><i class="fa-solid fa-cart-shopping"></i> <span> 5</span></a>
+        <a href="#" id="rightSideCart"><i class="fa-solid fa-cart-shopping"></i> <span> <?= count($items) ?></span></a>
     </div>
 
     <div class="cart-content d-flex">
 
         <!-- Cart List Area -->
         <div class="cart-list">
-            <!-- Single Cart Item -->
-            <div class="single-cart-item">
-                <a href="#" class="product-image">
-                    <img src="img/product-img/product-1.jpg" class="cart-thumb" alt="">
-                    <!-- Cart Item Desc -->
-                    <div class="cart-item-desc">
-                        <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
-                        <span class="badge">Mango</span>
-                        <h6>Button Through Strap Mini Dress</h6>
-                        <p class="size">Size: S</p>
-                        <p class="color">Color: Red</p>
-                        <p class="price">$45.00</p>
-                    </div>
-                </a>
-            </div>
+            <?php
+            $subtotal = 0;
+            $discount = 0;
+            $total = 0;
 
-            <!-- Single Cart Item -->
-            <div class="single-cart-item">
-                <a href="#" class="product-image">
-                    <img src="img/product-img/product-2.jpg" class="cart-thumb" alt="">
-                    <!-- Cart Item Desc -->
-                    <div class="cart-item-desc">
-                        <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
-                        <span class="badge">Mango</span>
-                        <h6>Button Through Strap Mini Dress</h6>
-                        <p class="size">Size: S</p>
-                        <p class="color">Color: Red</p>
-                        <p class="price">$45.00</p>
-                    </div>
-                </a>
-            </div>
+            foreach ($items as $item) {
+                // get product data
+                $product_id = $item['product_id'];
+                $resultx = $product->searchById($product_id);
+                // get cover image
+                $cover_array = json_decode($resultx['images_src'], true);
+                $cover = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
+                // get price
+                if ($resultx['discount'] == 0) {
+                    $pricex = $resultx['price'];
+                } else {
+                    $pricex = $resultx['price'] - ($resultx['price'] * $resultx['discount'] * 0.01);
+                }
+                $subtotal += $resultx['price'];
+                $discount += $resultx['discount'];
+                $total += $pricex;
+                echo "<!-- Single Cart Item -->
+                    <div class='single-cart-item'>
+                        <a  class='product-image'>
+                            <img src='dashboard/view/$cover' class='cart-thumb' alt='$resultx[name]'>
+                            <!-- Cart Item Desc -->
+                            <div class='cart-item-desc'>
+                            <span class='product-remove'><i class='fa fa-close' aria-hidden='true' onclick='remove($item[id])'></i></span>
+                                <span class='badge'>$resultx[brand]</span>
+                                <h6>$resultx[name]</h6>
+                                <p class='size'>Size: $item[size]</p>
+                                <p class='color'>Color: $item[color]</p>
+                                <p class='price'>$pricex $</p>
+                            </div>
+                        </a>
+                    </div>";
+            }
+            ?>
+            <!-- <form><button type='submit' value='id'><i class='fa fa-close' aria-hidden='true'></button></form> -->
 
-            <!-- Single Cart Item -->
-            <div class="single-cart-item">
-                <a href="#" class="product-image">
-                    <img src="img/product-img/product-3.jpg" class="cart-thumb" alt="">
-                    <!-- Cart Item Desc -->
-                    <div class="cart-item-desc">
-                        <span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
-                        <span class="badge">Mango</span>
-                        <h6>Button Through Strap Mini Dress</h6>
-                        <p class="size">Size: S</p>
-                        <p class="color">Color: Red</p>
-                        <p class="price">$45.00</p>
-                    </div>
-                </a>
-            </div>
         </div>
 
         <!-- Cart Summary -->
@@ -76,10 +80,10 @@
 
             <h2>Summary</h2>
             <ul class="summary-table">
-                <li><span>subtotal:</span> <span>$274.00</span></li>
+                <li><span>subtotal:</span> <span><?= $subtotal ?>$</span></li>
                 <li><span>delivery:</span> <span>Free</span></li>
-                <li><span>discount:</span> <span>-15%</span></li>
-                <li><span>total:</span> <span>$232.00</span></li>
+                <li><span>discount:</span> <span>-<?= $discount ?>%</span></li>
+                <li><span>total:</span> <span><?= $total ?>$</span></li>
             </ul>
             <div class="checkout-btn mt-100">
                 <a href="checkout.php" class="btn essence-btn">check out</a>
@@ -87,3 +91,53 @@
         </div>
     </div>
 </div>
+<script>
+    // function remove(id) {
+    //     fetch('files/cart.php', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded'
+    //             },
+    //             body: 'id=' + encodeURIComponent(id)
+    //         })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 return response.text();
+    //             } else {
+    //                 throw new Error('Request failed mother fucker');
+    //             }
+    //         })
+    //         .then(data => {
+    //             // Handle the response from the server
+    //             console.log(data);
+    //         })
+    //         .catch(error => {
+    //             // Handle errors
+    //             console.error(error);
+    //         });
+    // }
+
+
+    function remove(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'index.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = xhr.responseText;
+                    // Process the response from the PHP script
+                    console.log(response);
+                    location.reload();
+                } else {
+                    // Handle error cases
+                    console.error('Request failed with status:', xhr.status);
+                }
+            }
+        };
+
+        var data = 'id=' + encodeURIComponent(id);
+        xhr.send(data);
+    }
+</script>

@@ -856,6 +856,7 @@ img {
         position: relative;
         z-index: 1;
         overflow: hidden;
+        height: 285px !important;
         img {
             width: 100%;
             @include trans-duration(500ms);

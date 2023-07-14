@@ -222,7 +222,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price"><span class="old-price">$75.00</span> $55.00</p>
@@ -256,7 +256,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>
@@ -295,7 +295,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>
@@ -329,7 +329,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>
@@ -368,7 +368,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price"><span class="old-price">$75.00</span> $55.00</p>
@@ -402,7 +402,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>
@@ -441,7 +441,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>
@@ -475,7 +475,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>
@@ -509,7 +509,7 @@
                                     <!-- Product Description -->
                                     <div class="product-description">
                                         <span>topshop</span>
-                                        <a href="single-product-details.php">
+                                        <a href="productDetails.php">
                                             <h6>Knot Front Mini Dress</h6>
                                         </a>
                                         <p class="product-price">$80.00</p>

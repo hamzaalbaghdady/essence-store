@@ -56,6 +56,28 @@
 
                         <div class="cart-page-heading mb-30">
                             <h5>Billing Address</h5>
+                            <h6>
+                                <?php
+                                // $ip = $_SERVER['REMOTE_ADDR']; // Get the user's IP address
+                                $ip = '213.6.149.217';
+
+                                // Make a request to the IP Geolocation API
+                                $response = file_get_contents("http://ip-api.com/json/{$ip}");
+
+                                // Decode the JSON response into an associative array
+                                $data = json_decode($response, true);
+
+                                if ($data['status'] === 'success') {
+                                    $country = $data['country'];
+                                    $region = $data['regionName'];
+                                    $city = $data['city'];
+
+                                    echo "User location: {$city}, {$region}, {$country}";
+                                } else {
+                                    echo "Unable to retrieve user location.";
+                                }
+                                ?>
+                            </h6>
                         </div>
 
                         <form action="#" method="post">
@@ -68,9 +90,9 @@
                                     <label for="last_name">Last Name <span>*</span></label>
                                     <input type="text" class="form-control" id="last_name" value="" required>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <label for="company">Company Name</label>
-                                    <input type="text" class="form-control" id="company" value="">
+                                <div class="col-12 mb-4">
+                                    <label for="email_address">Email Address <span>*</span></label>
+                                    <input type="email" class="form-control" id="email_address" value="">
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="country">Country <span>*</span></label>
@@ -86,18 +108,18 @@
                                     </select>
                                 </div>
                                 <div class="col-12 mb-3">
+                                    <label for="city">Town/City <span>*</span></label>
+                                    <input type="text" class="form-control" id="city" value="">
+                                </div>
+                                <div class="col-12 mb-3">
                                     <label for="street_address">Address <span>*</span></label>
                                     <input type="text" class="form-control mb-3" id="street_address" value="">
-                                    <input type="text" class="form-control" id="street_address2" value="">
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="postcode">Postcode <span>*</span></label>
                                     <input type="text" class="form-control" id="postcode" value="">
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <label for="city">Town/City <span>*</span></label>
-                                    <input type="text" class="form-control" id="city" value="">
-                                </div>
+
                                 <div class="col-12 mb-3">
                                     <label for="state">Province <span>*</span></label>
                                     <input type="text" class="form-control" id="state" value="">
@@ -106,10 +128,7 @@
                                     <label for="phone_number">Phone No <span>*</span></label>
                                     <input type="number" class="form-control" id="phone_number" min="0" value="">
                                 </div>
-                                <div class="col-12 mb-4">
-                                    <label for="email_address">Email Address <span>*</span></label>
-                                    <input type="email" class="form-control" id="email_address" value="">
-                                </div>
+
 
                                 <div class="col-12">
                                     <div class="custom-control custom-checkbox d-block mb-2">
@@ -139,11 +158,26 @@
                         </div>
 
                         <ul class="order-details-form mb-4">
-                            <li><span>Product</span> <span>Total</span></li>
-                            <li><span>Cocktail Yellow dress</span> <span>$59.90</span></li>
-                            <li><span>Subtotal</span> <span>$59.90</span></li>
+                            <li><span>Product</span> <span>Price</span></li>
+                            <?php
+                            foreach ($items as $item) {
+                                // get product data
+                                $product_id = $item['product_id'];
+                                $resultx = $product->searchById($product_id);
+                                // get cover image
+
+                                // get price
+                                if ($resultx['discount'] == 0) {
+                                    $price = $resultx['price'];
+                                } else {
+                                    $price = $resultx['price'] - ($resultx['price'] * $resultx['discount'] * 0.01);
+                                }
+                                echo "<li><span>$resultx[name]</span> <span>$price$</span></li>";
+                            }
+                            ?>
+                            <li><span>Subtotal</span> <span><?= $subtotal ?>$</span></li>
                             <li><span>Shipping</span> <span>Free</span></li>
-                            <li><span>Total</span> <span>$59.90</span></li>
+                            <li><span>Total</span> <span><?= $total ?>$</span></li>
                         </ul>
 
                         <div id="accordion" role="tablist" class="mb-4">
@@ -156,7 +190,12 @@
 
                                 <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="card-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra tempor so dales. Phasellus sagittis auctor gravida. Integ er bibendum sodales arcu id te mpus. Ut consectetur lacus.</p>
+                                        <form method="post">
+                                            <div class="col-12 mb-3">
+                                                <label for="state">Province <span>*</span></label>
+                                                <input type="text" class="form-control" id="state" value="">
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

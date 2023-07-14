@@ -1,11 +1,11 @@
 <?php
 require_once "database.php";
 
-class Category
+class Cart
 {
 
-    // add new category to database
-    public function addCat($name)
+    // add new cart item to database
+    public function addToCart($product_id, $user_id, $color, $size)
     {
         try {
             $db = new Database;
@@ -13,19 +13,25 @@ class Category
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("INSERT INTO `categories`(`name`) VALUES (:name);");
-            $sql->bindParam(':name', $name);
+            $sql = $conn->prepare("INSERT INTO `cart`(`product_id`, `user_id`, `color`, `size`) VALUES (:p_id,:u_id,:color,:size)");
+            $sql->bindParam(':p_id', $product_id);
+            $sql->bindParam(':u_id', $user_id);
+            $sql->bindParam(':color', $color);
+            $sql->bindParam(':size', $size);
             // no results return
             $sql->execute();
-            echo "New record created successfully";
+            $status = "true";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            // echo "Connection failed: " . $ex->getMessage();
+            $status = "false";
         }
         $conn = null;
+        return $status;
     }
 
-    // edit  category in database
-    public function editCat($id, $name)
+
+    // delete  item from cart
+    public function deleteFromCart($id)
     {
         try {
             $db = new Database;
@@ -33,29 +39,7 @@ class Category
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("UPDATE `categories` c SET `name`=:name WHERE c.id=:id;");
-
-            $sql->bindParam(':id', $id);
-            $sql->bindParam(':name', $name);
-            // no results return
-            $sql->execute();
-            echo "Record Edited successfully";
-        } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
-        }
-        $conn = null;
-    }
-
-    // delete  category in database
-    public function deleteCat($id)
-    {
-        try {
-            $db = new Database;
-            $conn = $db->conn;
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // echo "Connected successfully";
-            $sql = $conn->prepare("DELETE FROM `categories`  WHERE id=:id;");
+            $sql = $conn->prepare("DELETE FROM `cart` WHERE id=:id;");
             $sql->bindParam(':id', $id);
             // no results return
             $sql->execute();
@@ -66,11 +50,8 @@ class Category
         $conn = null;
     }
 
-    /*
-    if id is set it returns only one record for specifec category id
-    else it returns all categories in category table
-    */
-    public function search($id = "")
+    // return all cart items for a spicefic user based on id
+    public function getCartItems($id)
     {
         try {
             $db = new Database;
@@ -78,13 +59,10 @@ class Category
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            if ($id == "") {
-                // return only one record
-                $sql = $conn->prepare("SELECT * FROM `categories`;");
-            } else {
-                $sql = $conn->prepare("SELECT * FROM `categories` c WHERE c.id=:id;");
-                $sql->bindParam(':id', $id);
-            }
+
+            $sql = $conn->prepare("SELECT * FROM `cart` c WHERE c.user_id=:id;");
+            $sql->bindParam(':id', $id);
+
             $sql->execute();
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);

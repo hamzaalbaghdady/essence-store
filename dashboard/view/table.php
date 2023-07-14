@@ -233,7 +233,7 @@ $product = new product;
                                                 <td>$val[colors]</td>
                                                 <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
                                                 <a onclick='alert_confirm(\"deleteProduct.php?id=$val[id]\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
-                                                <a href='../../single-product-details.php?id=$val[id]'><i class='fa-solid fa-eye' title='View'></i></a></td>
+                                                <a href='../../productDetails.php?id=$val[id]'><i class='fa-solid fa-eye' title='View'></i></a></td>
                                                 </tr>";
                                         }
                                         ?>

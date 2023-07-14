@@ -1,3 +1,15 @@
+<?PHP
+include_once "dashboard/model/productClass.php";
+include_once "dashboard/model/cartClass.php";
+$cart = new Cart;
+if (isset($_POST['id'])) {
+    $id = $_POST['id'];
+
+    // Call your removeProduct() function passing the ID
+    $cart->deleteFromCart($id);
+    header("Refresh: 1");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +31,11 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .product-img {
+            height: 285px;
+        }
+    </style>
 </head>
 
 <body>
@@ -105,7 +122,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="section-heading text-center">
-                        <h2>Popular Products</h2>
+                        <h2>Newest Products</h2>
                     </div>
                 </div>
             </div>
@@ -115,138 +132,131 @@
             <div class="row">
                 <div class="col-12">
                     <div class="popular-products-slides owl-carousel">
+                        <?php
+                        $product = new product;
+                        $result = $product->getLast10Products();
+                        foreach ($result as $val) {
+                            $cover_array = json_decode($val['images_src'], true);
+                            $caver = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
 
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="img/product-img/product-1.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <!-- <img class="hover-img" src="img/product-img/product-2.jpg" alt=""> -->
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>topshop</span>
-                                <a href="single-product-details.php">
-                                    <h6>Knot Front Mini Dress</h6>
-                                </a>
-                                <p class="product-price">$80.00</p>
-
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="single-product-details.php" class="btn essence-btn">Add to Cart</a>
+                            echo "
+                                <!-- Single Product -->
+                                <div class='single-product-wrapper'>
+                                    <!-- Product Image -->
+                                    <div class='product-img'>
+                                        <img src='dashboard/view/$caver' alt='$val[name]'>
+                                        <!-- Product Badge -->
+                                        <div class='product-badge new-badge'>
+                                        <span>New</span>
+                                        </div>
+                                        <!-- Favourite -->
+                                        <div class='product-favourite'>
+                                            <a href='#' class='favme fa fa-heart'></a>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="img/product-img/product-2.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <!-- <img class="hover-img" src="img/product-img/product-3.jpg" alt=""> -->
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>topshop</span>
-                                <a href="single-product-details.php">
-                                    <h6>Poplin Displaced Wrap Dress</h6>
-                                </a>
-                                <p class="product-price">$80.00</p>
-
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
+                                    <!-- Product Description -->
+                                    <div class='product-description'>
+                                        <span>$val[brand]</span>
+                                        <a href='productDetails.php?id=$val[id]'>
+                                            <h6>$val[name]</h6>
+                                        </a>
+                                        <p class='product-price'>$val[price]$</p>
+        
+                                        <!-- Hover Content -->
+                                        <div class='hover-content'>
+                                            <!-- Add to Cart -->
+                                            <div class='add-to-cart-btn'>
+                                                <a href='productDetails.php?id=$val[id]' class='btn essence-btn'>Add to Cart</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                </div>";
+                        }
+                        ?>
 
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="img/product-img/product-3.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <!-- <img class="hover-img" src="img/product-img/product-4.jpg" alt=""> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ##### New Arrivals Area End ##### -->
 
-                                <!-- Product Badge -->
-                                <div class="product-badge offer-badge">
-                                    <span>-30%</span>
-                                </div>
+    <!-- ##### New Arrivals Area Start ##### -->
+    <section class="new_arrivals_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading text-center">
+                        <h2>Top Rated Products</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>mango</span>
-                                <a href="single-product-details.php">
-                                    <h6>PETITE Crepe Wrap Mini Dress</h6>
-                                </a>
-                                <p class="product-price"><span class="old-price">$75.00</span> $55.00</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="popular-products-slides owl-carousel">
+                        <?php
+                        $product = new product;
+                        $result = $product->getTopRatedProducts();
+                        foreach ($result as $val) {
+                            $cover_array = json_decode($val['images_src'], true);
+                            $caver = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
+                            $date = (calDateDiff($val['date_of_additon']) > 7) ? "" : "<div class='product-badge new-badge'><span>New</span></div>";
+                            if ($val['discount'] == 0) {
+                                $discount = "";
+                                $price = $val['price'];
+                                $oldPrice = "";
+                            } else {
+                                $discount = "<div class='product-badge offer-badge'><span>$val[discount]%</span></div>";
+                                $price = $val['price'] - ($val['price'] * $val['discount'] * 0.01);
+                                $oldPrice = $val['price'] . "$";
+                            }
 
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
+                            echo "
+                                <!-- Single Product -->
+                                <div class='single-product-wrapper'>
+                                    <!-- Product Image -->
+                                    <div class='product-img'>
+                                        <img src='dashboard/view/$caver' alt='$val[name]'>
+                                        <!-- Product Badge -->
+                                        $date $discount
+                                        <!-- Favourite -->
+                                        <div class='product-favourite'>
+                                            <a href='#' class='favme fa fa-heart'></a>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="img/product-img/product-4.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <!-- <img class="hover-img" src="img/product-img/product-5.jpg" alt=""> -->
-
-                                <!-- Product Badge -->
-                                <div class="product-badge new-badge">
-                                    <span>New</span>
-                                </div>
-
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>mango</span>
-                                <a href="single-product-details.php">
-                                    <h6>PETITE Belted Jumper Dress</h6>
-                                </a>
-                                <p class="product-price">$80.00</p>
-
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
+                                    <!-- Product Description -->
+                                    <div class='product-description'>
+                                        <span>$val[brand]</span>
+                                        <a href='productDetails.php?id=$val[id]'>
+                                            <h6>$val[name]</h6>
+                                        </a>
+                                        <p class='product-price'><span class='old-price'>$oldPrice</span>$price$</p>
+        
+                                        <!-- Hover Content -->
+                                        <div class='hover-content'>
+                                            <!-- Add to Cart -->
+                                            <div class='add-to-cart-btn'>
+                                                <a href='productDetails.php?id=$val[id]' class='btn essence-btn'>Add to Cart</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                </div>";
+                        }
+                        function calDateDiff($start)
+                        {
+                            $startDate = new DateTime($start);
+                            $endDate = new DateTime(date('Y-m-d'));
+
+                            $interval = $startDate->diff($endDate);
+                            $days = $interval->days;
+
+                            return $days;
+                        }
+                        ?>
+
                     </div>
                 </div>
             </div>

@@ -68,7 +68,7 @@ require_once "../model/categoryClass.php";
             <div class="container mt-5 d-flex justify-content-center">
                 <div class="alert alert-success" role="alert">
                     <?php
-                    // add new product
+                    // add new category
                     if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         $name = $_POST['name'];
                         $btn = $_POST['submitBtn'];

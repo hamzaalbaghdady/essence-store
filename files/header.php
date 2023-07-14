@@ -1,3 +1,12 @@
+<?php
+require_once "dashboard/model/cartClass.php";
+require_once "dashboard/model/productClass.php";
+$cart = new Cart;
+$product = new product;
+$user_id = 1; // TODO
+$items = $cart->getCartItems($user_id);
+
+?>
 <header class="header_area">
     <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
         <!-- Classy Menu -->
@@ -52,7 +61,7 @@
                             <ul class="dropdown">
                                 <li><a href="index.php">Home</a></li>
                                 <li><a href="shop.php">Shop</a></li>
-                                <li><a href="single-product-details.php">Product Details</a></li>
+                                <li><a href="productDetails.php">Product Details</a></li>
                                 <li><a href="checkout.php">Checkout</a></li>
                                 <li><a href="blog.php">Blog</a></li>
                                 <li><a href="single-blog.php">Single Blog</a></li>
@@ -88,7 +97,7 @@
             <!-- Cart Area -->
             <div class="cart-area">
                 <a href="#" title="Cart" id="essenceCartBtn"><i class="fa-solid fa-cart-shopping"></i> <span>
-                        3</span></a>
+                        <?= count($items) ?></span></a>
             </div>
         </div>
 

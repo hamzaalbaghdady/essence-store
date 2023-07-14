@@ -205,7 +205,7 @@ class product
         $conn = null;
     }
 
-    // search for a specifec store based on id in database
+    // search for a specifec product based on id in database
     public function searchById($id)
     {
         try {
@@ -289,12 +289,12 @@ class product
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("SELECT COUNT(s_id) as count FROM `store`;");
+            $sql = $conn->prepare("SELECT COUNT(id) as count FROM `products`;");
             $sql->execute();
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
             $result = $sql->fetch();
-            return $result;
+            return $result['count'];
         } catch (PDOException $ex) {
             echo "Connection failed: " . $ex->getMessage();
         }
@@ -337,6 +337,45 @@ class product
             // echo "Connected successfully";
             $sql = $conn->prepare("SELECT * FROM `products` p WHERE p.brand=:name;");
             $sql->bindParam(':name', $brandName);
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Connection failed: " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+
+    public function getLast10Products()
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // echo "Connected successfully";
+            $sql = $conn->prepare("SELECT * FROM `products` ORDER BY id DESC LIMIT 10;");
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Connection failed: " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+    public function getTopRatedProducts()
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // echo "Connected successfully";
+            $sql = $conn->prepare("SELECT * FROM `products` ORDER BY rate DESC LIMIT 10;");
             $sql->execute();
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
