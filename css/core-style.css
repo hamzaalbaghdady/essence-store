@@ -1654,7 +1654,7 @@ img {
   background-color: #ffffff;
 }
 .widget.color .widget-desc ul li a.color2 {
-  background-color: #969696;
+  background-color: #4f4f4f;
 }
 .widget.color .widget-desc ul li a.color3 {
   background-color: #030303;
@@ -1663,23 +1663,39 @@ img {
   background-color: #0315ff;
 }
 .widget.color .widget-desc ul li a.color5 {
-  background-color: #dc0647;
+  background-color: #ff0000;
 }
 .widget.color .widget-desc ul li a.color6 {
   background-color: #fff56a;
 }
 .widget.color .widget-desc ul li a.color7 {
-  background-color: #f26e51;
+  background-color: #ee3910;
 }
 .widget.color .widget-desc ul li a.color8 {
-  background-color: #9a8777;
+  background-color: #0de2ee;
 }
 .widget.color .widget-desc ul li a.color9 {
-  background-color: #5b862a;
+  background-color: #0ded1f;
 }
 .widget.color .widget-desc ul li a.color10 {
-  background-color: #8662a9;
+  background-color: #8513f7;
 }
+.widget.color .widget-desc ul li a.color11 {
+  background-color: #0a3b06;
+}
+.widget.color .widget-desc ul li a.color12 {
+  background-color: #d4d4d4;
+}
+.widget.color .widget-desc ul li a.color13 {
+  background-color: #090338;
+}
+.widget.color .widget-desc ul li a.color14 {
+  background-color: #5c0404;
+}
+.widget.color .widget-desc ul li a.color15 {
+  background-color: #88cb1b;
+}
+
 .widget.brands ul li {
   display: block;
 }

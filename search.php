@@ -1,3 +1,60 @@
+<?php
+include_once "dashboard/model/productClass.php";
+include_once "dashboard/model/categoryClass.php";
+include_once "dashboard/model/brandClass.php";
+$product = new product;
+
+if (isset($_POST['searchBtn'])) {
+    $name = $_POST['search'];
+} else $name = "";
+
+if (isset($_POST['sort'])) {
+    $sort = $_POST['sort'];
+} else $sort = "";
+
+if (isset($_POST['min_price'])) {
+    $price1 = $_POST['min_price'];
+    echo "min price: " . $price1;
+} else $price1 = "";
+
+if (isset($_POST['max_price'])) {
+    $price2 = $_POST['max_price'];
+    echo " Max price: " . $price2;
+} else $price2 = "";
+
+$url = $_SERVER['QUERY_STRING'];
+$xurl = [
+    'page' => '',
+    'cid' => '',
+    'c' => '',
+    'b' => ''
+];
+
+if (isset($_GET['page']))
+    $offset = $_GET['page'] * 9;
+else $offset = "";
+
+if (isset($_GET['cid'])) {
+    $category = $_GET['cid'];
+    $xurl['cid'] = $category;
+} else $category = "";
+
+if (isset($_GET['c'])) {
+    $color = $_GET['c'];
+    $xurl['c'] = $color;
+} else $color = "";
+
+if (isset($_GET['b'])) {
+    $brand = $_GET['b'];
+    $xurl['b'] = $brand;
+} else $brand = "";
+
+$search_result = $product->Xsearch($name, $sort, $offset, $category, $price1, $price2, $color, $brand);
+// $xurl = implode('&', array_map(function ($key, $value) {
+//     return $key . '=' . $value;
+// }, array_keys($xurl), $xurl));;
+// echo $xurl;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +77,21 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <style>
+        .single-product-wrapper {
+            width: 30%;
+            margin: 30px auto;
+        }
+
+        li a {
+            color: black;
+            font-weight: normal;
+        }
+
+        .badge {
+            color: #fff;
+        }
+    </style>
 </head>
 
 <body>
@@ -58,59 +130,25 @@
                             <h6 class="widget-title mb-30">Catagories</h6>
 
                             <!--  Catagories  -->
-                            <div class="catagories-menu">
-                                <ul id="menu-content2" class="menu-content collapse show">
-                                    <!-- Single Item -->
-                                    <li data-toggle="collapse" data-target="#clothing">
-                                        <a href="#">clothing</a>
-                                        <ul class="sub-menu collapse show" id="clothing">
-                                            <li><a href="#">All</a></li>
-                                            <li><a href="#">Bodysuits</a></li>
-                                            <li><a href="#">Dresses</a></li>
-                                            <li><a href="#">Hoodies &amp; Sweats</a></li>
-                                            <li><a href="#">Jackets &amp; Coats</a></li>
-                                            <li><a href="#">Jeans</a></li>
-                                            <li><a href="#">Pants &amp; Leggings</a></li>
-                                            <li><a href="#">Rompers &amp; Jumpsuits</a></li>
-                                            <li><a href="#">Shirts &amp; Blouses</a></li>
-                                            <li><a href="#">Shirts</a></li>
-                                            <li><a href="#">Sweaters &amp; Knits</a></li>
-                                        </ul>
+                            <div class="list-group">
+                                <ul class="list-group">
+                                    <li class='list-group-item d-flex justify-content-between align-items-center'>
+                                        <a href='search.php'>All</a>
                                     </li>
-                                    <!-- Single Item -->
-                                    <li data-toggle="collapse" data-target="#shoes" class="collapsed">
-                                        <a href="#">shoes</a>
-                                        <ul class="sub-menu collapse" id="shoes">
-                                            <li><a href="#">All</a></li>
-                                            <li><a href="#">Bodysuits</a></li>
-                                            <li><a href="#">Dresses</a></li>
-                                            <li><a href="#">Hoodies &amp; Sweats</a></li>
-                                            <li><a href="#">Jackets &amp; Coats</a></li>
-                                            <li><a href="#">Jeans</a></li>
-                                            <li><a href="#">Pants &amp; Leggings</a></li>
-                                            <li><a href="#">Rompers &amp; Jumpsuits</a></li>
-                                            <li><a href="#">Shirts &amp; Blouses</a></li>
-                                            <li><a href="#">Shirts</a></li>
-                                            <li><a href="#">Sweaters &amp; Knits</a></li>
-                                        </ul>
-                                    </li>
-                                    <!-- Single Item -->
-                                    <li data-toggle="collapse" data-target="#accessories" class="collapsed">
-                                        <a href="#">accessories</a>
-                                        <ul class="sub-menu collapse" id="accessories">
-                                            <li><a href="#">All</a></li>
-                                            <li><a href="#">Bodysuits</a></li>
-                                            <li><a href="#">Dresses</a></li>
-                                            <li><a href="#">Hoodies &amp; Sweats</a></li>
-                                            <li><a href="#">Jackets &amp; Coats</a></li>
-                                            <li><a href="#">Jeans</a></li>
-                                            <li><a href="#">Pants &amp; Leggings</a></li>
-                                            <li><a href="#">Rompers &amp; Jumpsuits</a></li>
-                                            <li><a href="#">Shirts &amp; Blouses</a></li>
-                                            <li><a href="#">Shirts</a></li>
-                                            <li><a href="#">Sweaters &amp; Knits</a></li>
-                                        </ul>
-                                    </li>
+                                    <?php
+                                    $category = new Category;
+
+                                    $categories = $category->search();
+                                    foreach ($categories as $val) {
+                                        $c_count = count($product->ProductsPerCategory($val['id']));
+                                        echo "
+                                        <li class='list-group-item d-flex justify-content-between align-items-center'>
+                                        <a href='$_SERVER[PHP_SELF]?$url&cid=$val[id]'>$val[name]</a>
+                                        <span class='badge bg-primary rounded-pill'>$c_count</span>
+                                        </li>";
+                                    }
+                                    ?>
+
                                 </ul>
                             </div>
                         </div>
@@ -130,6 +168,7 @@
                                         <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                                     </div>
                                     <div class="range-price">Range: $49.00 - $360.00</div>
+                                    <!-- <div class="">Range: <?= $_POST['min_price'] . " - " . $_POST['max_price'] ?></div> -->
                                 </div>
                             </div>
                         </div>
@@ -140,16 +179,21 @@
                             <p class="widget-title2 mb-30">Color</p>
                             <div class="widget-desc">
                                 <ul class="d-flex">
-                                    <li><a href="#" class="color1"></a></li>
-                                    <li><a href="#" class="color2"></a></li>
-                                    <li><a href="#" class="color3"></a></li>
-                                    <li><a href="#" class="color4"></a></li>
-                                    <li><a href="#" class="color5"></a></li>
-                                    <li><a href="#" class="color6"></a></li>
-                                    <li><a href="#" class="color7"></a></li>
-                                    <li><a href="#" class="color8"></a></li>
-                                    <li><a href="#" class="color9"></a></li>
-                                    <li><a href="#" class="color10"></a></li>
+                                    <li><a href="search.php?c=white" class="color1"></a></li>
+                                    <li><a href="search.php?c=dgray" class="color2"></a></li>
+                                    <li><a href="search.php?c=black" class="color3"></a></li>
+                                    <li><a href="search.php?c=blue" class="color4"></a></li>
+                                    <li><a href="search.php?c=red" class="color5"></a></li>
+                                    <li><a href="search.php?c=yellow" class="color6"></a></li>
+                                    <li><a href="search.php?c=oreng" class="color7"></a></li>
+                                    <li><a href="search.php?c=aqua" class="color8"></a></li>
+                                    <li><a href="search.php?c=green" class="color9"></a></li>
+                                    <li><a href="search.php?c=parpul" class="color10"></a></li>
+                                    <li><a href="search.php?c=dgreen" class="color11"></a></li>
+                                    <li><a href="search.php?c=lgray" class="color12"></a></li>
+                                    <li><a href="search.php?c=dblue" class="color13"></a></li>
+                                    <li><a href="search.php?c=derd" class="color14"></a></li>
+                                    <li><a href="search.php?c=olive" class="color15"></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -160,11 +204,16 @@
                             <p class="widget-title2 mb-30">Brands</p>
                             <div class="widget-desc">
                                 <ul>
-                                    <li><a href="#">Asos</a></li>
-                                    <li><a href="#">Mango</a></li>
-                                    <li><a href="#">River Island</a></li>
-                                    <li><a href="#">Topshop</a></li>
-                                    <li><a href="#">Zara</a></li>
+                                    <li><a href='search.php'>All</a></li>
+                                    <?php
+                                    $brand = new brand;
+
+                                    $brands = $brand->search();
+                                    foreach ($brands as $b) {
+                                        echo "<li><a href='$_SERVER[PHP_SELF]?$url&b=$b[name]'>$b[name]</a></li>";
+                                    }
+                                    ?>
+
                                 </ul>
                             </div>
                         </div>
@@ -178,18 +227,25 @@
                                 <div class="product-topbar d-flex align-items-center justify-content-between">
                                     <!-- Total Products -->
                                     <div class="total-products">
-                                        <p><span>186</span> products found</p>
+                                        <p><span><?= count($search_result) ?></span> products found</p>
                                     </div>
                                     <!-- Sorting -->
-                                    <div class="product-sorting d-flex">
-                                        <p>Sort by:</p>
-                                        <form action="#" method="get">
-                                            <select name="select" id="sortByselect">
-                                                <option value="value">Newest</option>
-                                                <option value="value">Top Rated</option>
-                                                <option value="value">Most Selling</option>
+                                    <div class="product-sorting d-flex justify-content-between">
+                                        <!-- <p>Sort by:</p> -->
+                                        <form action="search.php" method="POST">
+                                            <!-- <select name="sort" id="sortByselect">
+                                                <option selected value="id">Newest</option>
+                                                <option value="rate">Top Rated</option>
+                                                <option value="discount">Most Selling</option>
                                             </select>
-                                            <input type="submit" class="d-none" value="">
+                                            <input type="submit" class="d-none" value=""> -->
+                                            <select class="form-select" aria-label="Default select example" name="sort">
+                                                <option selected>Sort By:</option>
+                                                <option value="id">Newest</option>
+                                                <option value="rate">Top Rated</option>
+                                                <option value="discount">Most Selling</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-dark">Sort</button>
                                         </form>
                                     </div>
                                 </div>
@@ -197,344 +253,98 @@
                         </div>
 
                         <div class="row">
+                            <?php
 
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
+
+                            foreach ($search_result as $val) {
+                                $cover_array = json_decode($val['images_src'], true);
+                                $cover = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
+                                $date = ($product->calDateDiff($val['date_of_additon']) > 7) ? "" : "<div class='product-badge new-badge'><span>New</span></div>";
+                                if ($val['discount'] == 0) {
+                                    $discount = "";
+                                    $price = $val['price'];
+                                    $oldPrice = "";
+                                } else {
+                                    $discount = "<div class='product-badge offer-badge'><span>$val[discount]%</span></div>";
+                                    $price = $val['price'] - ($val['price'] * $val['discount'] * 0.01);
+                                    $oldPrice = $val['price'] . "$";
+                                }
+
+                                echo "
+                                <!-- Single Product -->
+                                <div class='single-product-wrapper'>
                                     <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-1.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-2.jpg" alt="">
-
+                                    <div class='product-img'>
+                                        <img src='dashboard/view/$cover' alt='$val[name]'>
                                         <!-- Product Badge -->
-                                        <div class="product-badge offer-badge">
-                                            <span>-30%</span>
-                                        </div>
+                                        $date $discount
                                         <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
+                                        <div class='product-favourite'>
+                                            <a href='#' class='favme fa fa-heart'></a>
                                         </div>
                                     </div>
-
                                     <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
+                                    <div class='product-description'>
+                                        <span>$val[brand]</span>
+                                        <a href='productDetails.php?id=$val[id]'>
+                                            <h6>$val[name]</h6>
                                         </a>
-                                        <p class="product-price"><span class="old-price">$75.00</span> $55.00</p>
-
+                                        <p class='product-price'><span class='old-price'>$oldPrice</span>$price$</p>
+        
                                         <!-- Hover Content -->
-                                        <div class="hover-content">
+                                        <div class='hover-content'>
                                             <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
+                                            <div class='add-to-cart-btn'>
+                                                <a href='productDetails.php?id=$val[id]' class='btn essence-btn'>Add to Cart</a>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div>";
+                            }
 
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-2.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-3.jpg" alt="">
+                            ?>
 
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
 
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
 
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-3.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-4.jpg" alt="">
-
-                                        <!-- Product Badge -->
-                                        <div class="product-badge new-badge">
-                                            <span>New</span>
-                                        </div>
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-4.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-5.jpg" alt="">
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-5.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-6.jpg" alt="">
-
-                                        <!-- Product Badge -->
-                                        <div class="product-badge offer-badge">
-                                            <span>-30%</span>
-                                        </div>
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price"><span class="old-price">$75.00</span> $55.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-6.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-7.jpg" alt="">
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-7.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-8.jpg" alt="">
-
-                                        <!-- Product Badge -->
-                                        <div class="product-badge new-badge">
-                                            <span>New</span>
-                                        </div>
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-8.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-9.jpg" alt="">
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Product -->
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="img/product-img/product-9.jpg" alt="">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="img/product-img/product-1.jpg" alt="">
-
-                                        <!-- Favourite -->
-                                        <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span>topshop</span>
-                                        <a href="productDetails.php">
-                                            <h6>Knot Front Mini Dress</h6>
-                                        </a>
-                                        <p class="product-price">$80.00</p>
-
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
                     <!-- Pagination -->
                     <nav aria-label="navigation">
                         <ul class="pagination mt-50 mb-70">
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">21</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
+                            <?PHP
+                            // get page number
+                            if (isset($_GET['page']))
+                                $page_no = $_GET['page'];
+                            else $page_no = null;
+                            ?>
+                            <li class="page-item <?= ($page_no == 1) ? 'disabled' : ''; ?>"><a class="page-link" href="<?= $_SERVER['PHP_SELF'] . '?' . $url . '&page=' . ($page_no - 1) ?>"><i class="fa fa-angle-left"></i></a></li>
+                            <?PHP
+
+                            // get count of pages
+                            // $pages_count = ceil(count($search_result) / 9);
+                            $pages_count = ceil(70 / 9);
+                            // 
+                            for ($i = 1; $i <= $pages_count; $i++) {
+                                if ($page_no == $i) {
+                                    $activeClass = "active";
+                                    $style = "style='color:#fff'";
+                                } else {
+                                    $activeClass = "";
+                                    $style = "";
+                                }
+
+                                echo "<li class='page-item $activeClass'><a class='page-link' $style href='$_SERVER[PHP_SELF]?$url&page=$i'>$i</a></li>";
+
+                                if ($i == 4 && $pages_count > 4) {
+                                    echo "<li class='page-item disabled'><a class='page-link' href='#'>...</a></li>";
+                                    echo "<li class='page-item'><a class='page-link' href='$_SERVER[PHP_SELF]?$url&page=$pages_count'>$pages_count</a></li>";
+                                    break; // Exit the loop after the "..." and last page link
+                                }
+                            }
+
+                            ?>
+                            <li class="page-item <?= ($page_no == $pages_count) ? 'disabled' : ''; ?>"><a class="page-link" href="<?= $_SERVER['PHP_SELF'] . '?' . $url . '&page=' . ($page_no + 1) ?>"><i class="fa fa-angle-right"></i></a></li>
                         </ul>
                     </nav>
                 </div>
@@ -546,7 +356,11 @@
     <!-- ##### Footer Area Start ##### -->
     <?php include "files/footer.php" ?>
     <!-- ##### Footer Area End ##### -->
-
+    <?php
+    // echo "<pre>"; 
+    // print_r($_SERVER);
+    // echo "</pre>";
+    ?>
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->

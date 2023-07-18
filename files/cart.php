@@ -92,32 +92,6 @@ $items = $cart->getCartItems($user_id);
     </div>
 </div>
 <script>
-    // function remove(id) {
-    //     fetch('files/cart.php', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/x-www-form-urlencoded'
-    //             },
-    //             body: 'id=' + encodeURIComponent(id)
-    //         })
-    //         .then(response => {
-    //             if (response.ok) {
-    //                 return response.text();
-    //             } else {
-    //                 throw new Error('Request failed mother fucker');
-    //             }
-    //         })
-    //         .then(data => {
-    //             // Handle the response from the server
-    //             console.log(data);
-    //         })
-    //         .catch(error => {
-    //             // Handle errors
-    //             console.error(error);
-    //         });
-    // }
-
-
     function remove(id) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'index.php', true);

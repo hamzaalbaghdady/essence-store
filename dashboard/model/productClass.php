@@ -5,7 +5,7 @@ require_once "database.php";
 class product
 {
 
-    // add store to database, no return value
+    // add product to database, no return value
     public function addProduct($name, $price, $quntity, $discount, $colors, $brand, $images_src, $description, $categories)
     {
         try {
@@ -43,7 +43,7 @@ class product
         }
         $conn = null;
     }
-
+    // validating images befor store them
     function valilledImg($Files, $name, $cover)
     {
         $array = array();
@@ -80,6 +80,18 @@ class product
             }
         }
         return json_encode($array);
+    }
+
+    // return the number of days between the $start and now
+    function calDateDiff($start)
+    {
+        $startDate = new DateTime($start);
+        $endDate = new DateTime(date('Y-m-d'));
+
+        $interval = $startDate->diff($endDate);
+        $days = $interval->days;
+
+        return $days;
     }
 
     // edit store in database, no return value
@@ -128,7 +140,7 @@ class product
         $conn = null;
     }
 
-    // edit only the rate attrbute in store table in database, no return value
+    // edit only the rate attrbute in product table in database, no return value
     public function editRate($id, $rate)
     {
         try {
@@ -151,7 +163,7 @@ class product
         $conn = null;
     }
 
-    // deletes a specifec store based on id in database
+    // deletes a specifec product based on id in database
     public function deleteProduct($id)
     {
         try {
@@ -175,7 +187,7 @@ class product
     }
 
     /*
-        if parameter is set it select based on store name in data base 
+        if parameter is set it select based on product name in data base 
         else it return all records in store table
     */
     public function search($name = "")
@@ -194,6 +206,89 @@ class product
                 $sql->bindParam(':name', $name, PDO::PARAM_STR);
             }
 
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Connection failed: " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+
+    //
+    public function Xsearch($name, $sort, $offset, $category, $price1, $price2, $color, $brand)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // make initial query
+            $query = "SELECT p.*,c.id AS 'cid', c.name AS 'cname' FROM `products` p
+            JOIN product_category pc ON p.id = pc.product_id
+            JOIN categories c ON pc.category_id = c.id
+            WHERE 1=1";
+            // update the query based on selected parameters
+            if ($name != "") {
+                $query .= " AND p.name like :name";
+                $name = '%' . $name . '%';
+            }
+            if ($category != "") {
+                $query .= " AND c.id=:id";
+            }
+            if ($price1 != "") {
+                $query .= " AND p.price < :price1";
+            }
+            if ($price2 != "") {
+                $query .= " AND p.price > :price2 ";
+            }
+            if ($color != "") {
+                $query .= " AND p.colors like :color";
+                $color = '%' . $color . '%';
+            }
+            if ($brand != "") {
+                $query .= " AND p.brand=:brand";
+            }
+            $query .= " GROUP BY p.id;";
+            if ($sort != "") {
+                $query .= " ORDER BY p.:sort DESC";
+            }
+            $query .= " limit 9 ";
+            if ($offset != "") {
+                $query .= " OFFSET :offset";
+            }
+
+
+
+            $sql = $conn->prepare($query);
+            // set parameters
+            if ($name != "") {
+                $sql->bindParam(':name', $name, PDO::PARAM_STR);
+            }
+            if ($category != "") {
+                $sql->bindParam(':id', $category);
+            }
+            if ($price1 != "") {
+                $sql->bindParam(':price1', $price);
+            }
+            if ($price2 != "") {
+                $sql->bindParam(':price2', $price);
+            }
+            if ($color != "") {
+                $sql->bindParam(':color', $color, PDO::PARAM_STR);
+            }
+            if ($brand != "") {
+                $sql->bindParam(':brand', $brand, PDO::PARAM_STR);
+            }
+            if ($sort != "") {
+                $sql->bindParam(':sort', $sort, PDO::PARAM_STR);
+            }
+            if ($offset != "") {
+                $sql->bindParam(':offset', $offset);
+            }
+            // echo $query;
             $sql->execute();
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
@@ -280,26 +375,7 @@ class product
         }
         $conn = null;
     }
-    // return the number of records in store table
-    public function ProductsCount()
-    {
-        try {
-            $db = new Database;
-            $conn = $db->conn;
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // echo "Connected successfully";
-            $sql = $conn->prepare("SELECT COUNT(id) as count FROM `products`;");
-            $sql->execute();
-            // set the resulting array to associative
-            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $sql->fetch();
-            return $result['count'];
-        } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
-        }
-        $conn = null;
-    }
+
 
     // returns an array of products based on category
     public function ProductsPerCategory($catId)
