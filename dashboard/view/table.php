@@ -4,12 +4,14 @@ session_start();
 require_once "../model/productClass.php";
 require_once "../model/categoryClass.php";
 require_once "../model/brandClass.php";
+require_once "../model/userClass.php";
 // if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
 //     header('Location:login.php');
 // }
 $brand = new Brand;
 $category = new Category;
 $product = new product;
+$user = new user;
 
 ?>
 <!DOCTYPE html>
@@ -108,74 +110,31 @@ $product = new product;
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">Name</th>
+                                            <th scope="col">First Name</th>
+                                            <th scope="col">Last Name</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Password</th>
-                                            <th scope="col">Info</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>John</td>
-                                            <td>jhon@email.com</td>
-                                            <td>password</td>
-                                            <td>USA</td>
-                                            <td>Member</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i> <i class="fa-solid fa-shield me-2" title="Block"></i></td>
-                                        </tr>
+                                        <?php
 
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>John</td>
-                                            <td>jhon@email.com</td>
-                                            <td>password</td>
-                                            <td>USA</td>
-                                            <td>Member</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i> <i class="fa-solid fa-shield me-2" title="Block"></i></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>John</td>
-                                            <td>jhon@email.com</td>
-                                            <td>password</td>
-                                            <td>USA</td>
-                                            <td>Member</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i> <i class="fa-solid fa-shield me-2" title="Block"></i></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>John</td>
-                                            <td>jhon@email.com</td>
-                                            <td>password</td>
-                                            <td>USA</td>
-                                            <td>Member</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i> <i class="fa-solid fa-shield me-2" title="Block"></i></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>John</td>
-                                            <td>jhon@email.com</td>
-                                            <td>password</td>
-                                            <td>USA</td>
-                                            <td>Member</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i> <i class="fa-solid fa-shield me-2" title="Block"></i></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>John</td>
-                                            <td>jhon@email.com</td>
-                                            <td>password</td>
-                                            <td>USA</td>
-                                            <td>Member</td>
-                                            <td><i class="fa-solid fa-pen-to-square me-2" title="Edit"></i> <i class="fa-solid fa-trash-can me-2" title="Delete"></i> <i class="fa-solid fa-shield me-2" title="Block"></i></td>
-                                        </tr>
+                                        $users = $user->getALL();
+                                        foreach ($users as $u) {
+                                            echo "<tr>
+                                                <td>$u[id]</td>
+                                                <td>$u[f_name]</td>
+                                                <td>$u[l_name]</td>
+                                                <td>$u[email]</td>
+                                                <td>$u[status]</td>
+                                                
+                                                <td><a href='#'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
+                                                <a onclick='alert_confirm(\"#\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
+                                                <a href='#'><i class='fa-solid fa-shield me-2' title='Block'></i></a></td>
+                                                </tr>";
+                                        }
+                                        ?>
 
                                     </tbody>
                                 </table>
@@ -373,7 +332,7 @@ $product = new product;
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'You can not delet a category with any product. ',
+                text: 'You can not delete a category with any product. ',
             })
         }
 

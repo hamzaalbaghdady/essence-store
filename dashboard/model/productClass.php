@@ -39,7 +39,7 @@ class product
 
             echo "New record created successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -135,7 +135,7 @@ class product
             $conn->commit();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -158,7 +158,7 @@ class product
             $sql->execute();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -179,7 +179,7 @@ class product
             $sql->execute();
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
             $status = 'false';
         }
         $conn = null;
@@ -212,7 +212,7 @@ class product
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -295,7 +295,7 @@ class product
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -320,61 +320,11 @@ class product
             $result = $sql->fetch();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
-    // selsct all from store based on limit and offset 
-    //limit:how many records, offset: start from record number ?
-    public function limitedSearch(int $limit, int $offset)
-    {
-        try {
-            $db = new Database;
-            $conn = $db->conn;
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // echo "Connected successfully";
-            $limit = (int) $limit;
-            $offset = (int) $offset;
-            $sql = $conn->prepare("SELECT * FROM `products` LIMIT :limit OFFSET :offset ;");
-            $sql->bindParam(':limit',  $limit, PDO::PARAM_INT); // for int value
-            $sql->bindParam(':offset', $offset, PDO::PARAM_INT);
 
-            $sql->execute();
-            // set the resulting array to associative
-            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $sql->fetchAll();
-            return $result;
-        } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
-        }
-        $conn = null;
-    }
-    // overload for limitedSearch() but it select by category id
-    public function searchByCat($id, int $limit, int $offset)
-    {
-        try {
-            $db = new Database;
-            $conn = $db->conn;
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // echo "Connected successfully";
-
-            $sql = $conn->prepare("SELECT * FROM `store` s WHERE cat_no=:catId LIMIT :limit OFFSET :offset;");
-            $sql->bindParam(':catId', $id);
-            $sql->bindParam(':limit', $limit, PDO::PARAM_INT);
-            $sql->bindParam(':offset', $offset, PDO::PARAM_INT);
-
-            $sql->execute();
-            // set the resulting array to associative
-            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $sql->fetchAll();
-            return $result;
-        } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
-        }
-        $conn = null;
-    }
 
 
     // returns an array of products based on category
@@ -385,11 +335,11 @@ class product
             $conn = $db->conn;
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = $conn->prepare("SELECT p.id, p.name, p.price, p.quantity, p.discount, p.rate, p.colors, p.date_of_additon, p.brand, p.description, p.images_src, c.name AS 'c_name'
+            $sql = $conn->prepare("SELECT p.*, c.name AS 'c_name'
             FROM products p
             JOIN product_category pc ON p.id = pc.product_id
             JOIN categories c ON pc.category_id = c.id
-            WHERE c.id = :id;");
+            WHERE c.id = :id GROUP BY p.id;");
             $sql->bindParam(':id', $catId);
             $sql->execute();
             // set the resulting array to associative
@@ -397,7 +347,41 @@ class product
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+
+    // returns an array of products based on category
+    public function seeAlso($categories, $brand)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "";
+            foreach ($categories as $key => $cat) {
+                $query .= " c.id = :id$key OR ";
+            }
+            $sql = $conn->prepare("SELECT p.*, c.name AS 'c_name'
+            FROM products p
+            JOIN product_category pc ON p.id = pc.product_id
+            JOIN categories c ON pc.category_id = c.id
+            WHERE $query p.brand=:brand GROUP BY p.id;");
+            $sql->bindParam(':brand', $brand);
+
+            foreach ($categories as $key => $cat) {
+                $sql->bindParam(':id' . $key, $cat['category_id'], PDO::PARAM_INT);
+            }
+
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -419,7 +403,7 @@ class product
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -439,7 +423,7 @@ class product
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -458,7 +442,7 @@ class product
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }

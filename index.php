@@ -1,6 +1,7 @@
 <?PHP
 include_once "dashboard/model/productClass.php";
 include_once "dashboard/model/cartClass.php";
+include_once "dashboard/model/favoritesClass.php";
 $cart = new Cart;
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
@@ -71,7 +72,7 @@ if (isset($_POST['id'])) {
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(img/bg-img/bg-2.jpg);">
                         <div class="catagory-content">
-                            <a href="clothing.php">Clothing</a>
+                            <a href="search.php?cid=2">Clothing</a>
                         </div>
                     </div>
                 </div>
@@ -79,7 +80,7 @@ if (isset($_POST['id'])) {
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(img/bg-img/bg-3.jpg);">
                         <div class="catagory-content">
-                            <a href="shoes.php">Shoes</a>
+                            <a href="search.php?cid=24">Shoes</a>
                         </div>
                     </div>
                 </div>
@@ -87,7 +88,7 @@ if (isset($_POST['id'])) {
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(img/bg-img/bg-4.jpg);">
                         <div class="catagory-content">
-                            <a href="accessories.php">Accessories</a>
+                            <a href="search.php?cid=25">Accessories</a>
                         </div>
                     </div>
                 </div>
@@ -106,7 +107,7 @@ if (isset($_POST['id'])) {
                             <div class="cta--text">
                                 <h6>-60%</h6>
                                 <h2>Global Sale</h2>
-                                <a href="shop.php" class="btn essence-btn">Buy Now</a>
+                                <a href="search.php" class="btn essence-btn">Buy Now</a>
                             </div>
                         </div>
                     </div>
@@ -138,6 +139,19 @@ if (isset($_POST['id'])) {
                         foreach ($result as $val) {
                             $cover_array = json_decode($val['images_src'], true);
                             $caver = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
+                            $date = ($product->calDateDiff($val['date_of_additon']) > 7) ? "" : "<div class='product-badge new-badge'><span>New</span></div>";
+                            if ($val['discount'] == 0) {
+                                $discount = "";
+                                $price = $val['price'];
+                                $oldPrice = "";
+                            } else {
+                                $discount = "<div class='product-badge offer-badge'><span>$val[discount]%</span></div>";
+                                $price = $val['price'] - ($val['price'] * $val['discount'] * 0.01);
+                                $oldPrice = $val['price'] . "$";
+                            }
+                            $favorites = new Favorites;
+                            $fav = $favorites->getAll($user_id, $val['id']);
+                            $is_fav = ($fav == null) ? "" : "active";
 
                             echo "
                                 <!-- Single Product -->
@@ -146,12 +160,10 @@ if (isset($_POST['id'])) {
                                     <div class='product-img'>
                                         <img src='dashboard/view/$caver' alt='$val[name]'>
                                         <!-- Product Badge -->
-                                        <div class='product-badge new-badge'>
-                                        <span>New</span>
-                                        </div>
+                                        $date $discount
                                         <!-- Favourite -->
                                         <div class='product-favourite'>
-                                            <a href='#' class='favme fa fa-heart'></a>
+                                            <a href='productDetails.php?id=$val[id]&f=$val[id]' class='favme fa fa-heart $is_fav'></a>
                                         </div>
                                     </div>
                                     <!-- Product Description -->
@@ -160,7 +172,7 @@ if (isset($_POST['id'])) {
                                         <a href='productDetails.php?id=$val[id]'>
                                             <h6>$val[name]</h6>
                                         </a>
-                                        <p class='product-price'>$val[price]$</p>
+                                        <p class='product-price'><span class='old-price'>$oldPrice</span>$price$</p>
         
                                         <!-- Hover Content -->
                                         <div class='hover-content'>
@@ -203,7 +215,7 @@ if (isset($_POST['id'])) {
                         foreach ($result as $val) {
                             $cover_array = json_decode($val['images_src'], true);
                             $caver = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
-                            $date = (calDateDiff($val['date_of_additon']) > 7) ? "" : "<div class='product-badge new-badge'><span>New</span></div>";
+                            $date = ($product->calDateDiff($val['date_of_additon']) > 7) ? "" : "<div class='product-badge new-badge'><span>New</span></div>";
                             if ($val['discount'] == 0) {
                                 $discount = "";
                                 $price = $val['price'];
@@ -213,6 +225,9 @@ if (isset($_POST['id'])) {
                                 $price = $val['price'] - ($val['price'] * $val['discount'] * 0.01);
                                 $oldPrice = $val['price'] . "$";
                             }
+
+                            $fav = $favorites->getAll($user_id, $val['id']);
+                            $is_fav = ($fav == null) ? "" : "active";
 
                             echo "
                                 <!-- Single Product -->
@@ -224,7 +239,7 @@ if (isset($_POST['id'])) {
                                         $date $discount
                                         <!-- Favourite -->
                                         <div class='product-favourite'>
-                                            <a href='#' class='favme fa fa-heart'></a>
+                                            <a href='productDetails.php?id=$val[id]&f=$val[id]' class='favme fa fa-heart $is_fav'></a>
                                         </div>
                                     </div>
                                     <!-- Product Description -->
@@ -244,16 +259,6 @@ if (isset($_POST['id'])) {
                                         </div>
                                     </div>
                                 </div>";
-                        }
-                        function calDateDiff($start)
-                        {
-                            $startDate = new DateTime($start);
-                            $endDate = new DateTime(date('Y-m-d'));
-
-                            $interval = $startDate->diff($endDate);
-                            $days = $interval->days;
-
-                            return $days;
                         }
                         ?>
 

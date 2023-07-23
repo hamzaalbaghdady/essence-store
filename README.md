@@ -13,3 +13,16 @@ Essence is a Collection Dresses store i get the front end template for free from
 
 - There is a lot of work in javascript that i can't do, its all about the look and it may make it easyer to the user so if you can work on it that will be great.
   \*\* the problems exist in the add and edit files.
+
+  ## At the end:
+
+  This is my first big project i have ever made so it have plenty of mistakes and bad practice. At end you will never learn unless you made mistakes, next time will be better : )
+
+  #### Things i am planning to work on:
+
+  - MVC
+  - AJAX
+  - Security
+  - Javascript
+  - Frontend
+  - ...

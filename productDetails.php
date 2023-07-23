@@ -1,11 +1,13 @@
 <?PHP
 require_once "dashboard/model/productClass.php";
+require_once "dashboard/model/categoryClass.php";
 require_once "dashboard/model/cartClass.php";
 require_once "dashboard/model/favoritesClass.php";
 
 $product = new product;
+$fav = new Favorites;
+
 $id = $_GET['id'];
-$user_id = 1; // $_SESSION['id']
 $result = $product->searchById($id);
 // get discount 
 if ($result['discount'] == 0) {
@@ -15,11 +17,7 @@ if ($result['discount'] == 0) {
     $price = $result['price'] - ($result['price'] * $result['discount'] * 0.01);
     $oldPrice = $result['price'] . "$";
 }
-// add to Favourites
-if (isset($_GET['f'])) {
-    $fav = new Favorites;
-    $fav->addToFav($user_id, $id);
-}
+
 
 
 ?>
@@ -84,27 +82,36 @@ if (isset($_GET['f'])) {
 
     <div class=" d-flex justify-content-center">
         <?php
-        // add to cart
-        // TODO: check if user have an acount 
-        if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $product_id = $id;
-            $size = $_POST['size'];
-            $color = $_POST['color'];
-            $btn = $_POST['submitBtn'];
-            if (isset($btn)) {
-                if (empty($size) || empty($color)) {
-                    echo "<div class='alert alert-danger' role='alert'>Fill all the fields!</div>";
-                } else if ($result['quantity'] <= 1) {
-                    echo "<div class='alert alert-danger' role='alert'>We dont have this product in Stock at the moment, try later. Thanks </div>";
-                } else {
-                    $cart = new Cart;
-                    $stat = $cart->addToCart($product_id, $user_id, $color, $size);
-                    if ($stat == "true") {
-                        echo "<div class='alert alert-success' role='alert'>Product has been added to your cart successfully.</div>";
-                    } else echo "<div class='alert alert-warning' role='alert'>The product has been already added to your cart!</div>";
+        // check if user have an acount 
+        if (isset($_SESSION['user'])) {
+            // add to cart
+            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $product_id = $id;
+                $size = $_POST['size'];
+                $color = $_POST['color'];
+                $btn = $_POST['submitBtn'];
+                if (isset($btn)) {
+                    if (empty($size) || empty($color)) {
+                        echo "<div class='alert alert-danger' role='alert'>Fill all the fields!</div>";
+                    } else if ($result['quantity'] <= 1) {
+                        echo "<div class='alert alert-danger' role='alert'>We dont have this product in Stock at the moment, try later. Thanks </div>";
+                    } else {
+                        $cart = new Cart;
+                        $stat = $cart->addToCart($product_id, $user_id, $color, $size);
+                        if ($stat == "true") {
+                            echo "<div class='alert alert-success' role='alert'>Product has been added to your cart successfully.</div>";
+                        } else echo "<div class='alert alert-warning' role='alert'>The product has been already added to your cart!</div>";
+                    }
                 }
             }
-        }
+            // add to Favourites
+            if (isset($_GET['f'])) {
+                $statf = $fav->addToFav($user_id, $id);
+                if ($statf == "true") {
+                    echo "<div class='alert alert-success' role='alert'>Product has been added to your favourites successfully.</div>";
+                } else echo "<div class='alert alert-warning' role='alert'>The product has been already added to your favourites!</div>";
+            }
+        } else echo "<div class='alert alert-danger' role='alert'>You need to have an account to add to cart or favourites!</div>";
         ?>
 
     </div>
@@ -168,7 +175,11 @@ if (isset($_GET['f'])) {
                     <button type="submit" name="submitBtn" id="openCart" value="5" class="btn essence-btn">Add to cart</button>
                     <!-- Favourite -->
                     <div class="product-favourite ml-4">
-                        <a href="productDetails.php?id=<?= $id ?>&f=<?= $id ?>" class="favme fa fa-heart"></a>
+                        <?php
+                        $fav_item = $fav->getAll($user_id, $id);
+                        $is_fav = ($fav_item == null) ? "" : "active";
+                        ?>
+                        <a href="productDetails.php?id=<?= $id ?>&f=<?= $id ?>" class="favme fa fa-heart <?= $is_fav ?>"></a>
                     </div>
                 </div>
             </form>
@@ -184,6 +195,85 @@ if (isset($_GET['f'])) {
                     echo "<i class='fa-regular fa-star '></i>";
                 }
                 ?>
+            </div>
+        </div>
+        <!-- see also -->
+    </section>
+    <section class="new_arrivals_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading text-center">
+                        <h3>See also</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="popular-products-slides owl-carousel">
+                        <?php
+                        $product = new product;
+                        $categoty = new Category;
+                        $cats = $categoty->getCatByProductID($id);
+                        $result2 = $product->seeAlso($cats, $result['brand']);
+
+                        foreach ($result2 as $val) {
+                            $cover_array = json_decode($val['images_src'], true);
+                            $caver = ($cover_array['cover'] == null) ? $cover_array[0] : $cover_array['cover'];
+                            $date = ($product->calDateDiff($val['date_of_additon']) > 7) ? "" : "<div class='product-badge new-badge'><span>New</span></div>";
+                            if ($val['discount'] == 0) {
+                                $discount = "";
+                                $price = $val['price'];
+                                $oldPrice = "";
+                            } else {
+                                $discount = "<div class='product-badge offer-badge'><span>$val[discount]%</span></div>";
+                                $price = $val['price'] - ($val['price'] * $val['discount'] * 0.01);
+                                $oldPrice = $val['price'] . "$";
+                            }
+                            $favorites = new Favorites;
+                            $fav = $favorites->getAll($user_id, $val['id']);
+                            $is_fav = ($fav == null) ? "" : "active";
+
+                            echo "
+                                <!-- Single Product -->
+                                <div class='single-product-wrapper'>
+                                    <!-- Product Image -->
+                                    <div class='product-img'>
+                                        <img src='dashboard/view/$caver' alt='$val[name]'>
+                                        <!-- Product Badge -->
+                                        $date $discount
+                                        <!-- Favourite -->
+                                        <div class='product-favourite'>
+                                            <a href='productDetails.php?id=$val[id]&f=$val[id]' class='favme fa fa-heart $is_fav'></a>
+                                        </div>
+                                    </div>
+                                    <!-- Product Description -->
+                                    <div class='product-description'>
+                                        <span>$val[brand]</span>
+                                        <a href='productDetails.php?id=$val[id]'>
+                                            <h6>$val[name]</h6>
+                                        </a>
+                                        <p class='product-price'><span class='old-price'>$oldPrice</span>$price$</p>
+        
+                                        <!-- Hover Content -->
+                                        <div class='hover-content'>
+                                            <!-- Add to Cart -->
+                                            <div class='add-to-cart-btn'>
+                                                <a href='productDetails.php?id=$val[id]' class='btn essence-btn'>Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>";
+                        }
+                        // }
+
+                        ?>
+
+                    </div>
+                </div>
             </div>
         </div>
     </section>

@@ -97,7 +97,7 @@ $product = new product;
                             <i class="fa fa-chart-pie fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Products</p>
-                                <h6 class="mb-0"><?= $product->ProductsCount(); ?></h6>
+                                <h6 class="mb-0"><?= count($product->search()); ?></h6>
                             </div>
                         </div>
                     </div>

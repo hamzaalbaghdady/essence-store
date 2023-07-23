@@ -32,6 +32,8 @@
     <?php include "files/cart.php" ?>
     <!-- ##### Right Side Cart End ##### -->
 
+
+
     <!-- ##### Breadcumb Area Start ##### -->
     <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg);">
         <div class="container h-100">
@@ -45,7 +47,76 @@
         </div>
     </div>
     <!-- ##### Breadcumb Area End ##### -->
+    <div class="container d-flex justify-content-center mt-3">
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $f_name = $_POST['f_name'];
+            $l_name = $_POST['l_name'];
+            $email = $_POST['email'];
+            $city = $_POST['city'];
+            $address = $_POST['address'];
+            $postcode = $_POST['postcode'];
+            $phone = $_POST['phone'];
+            $Pmethod = $_POST['Pmethod'];
+            //
+            $paypal_email = $_POST['paypal_email'];
+            $ssn = $_POST['ssn'];
+            $card_no = $_POST['card_no'];
+            $exp_date = $_POST['exp_date'];
+            $cv_code = $_POST['cv_code'];
+            $cardOwner_name = $_POST['cardOwnerName'];
+            $bank_name = $_POST['bank_name'];
+            $account_no = $_POST['account_no'];
+            $account_name = $_POST['account_name'];
+            //
+            $TC = $_POST['T&C'];
+            $submitBtn = $_POST['submitBtn'];
+            if (isset($submitBtn)) {
+                if (empty($f_name) || empty($l_name) || empty($email) || empty($city) || empty($TC) || empty($address) || empty($postcode) || empty($phone) || empty($Pmethod)) {
+                    alert("Fill all the fields", "danger");
+                } else {
+                    $pay_status = true;
+                    switch ($Pmethod) {
+                        case 'paypal':
+                            if (empty($paypal_email)) {
+                                alert("Fill the paypal email field!", "danger");
+                                $pay_status = false;
+                            }
+                            break;
 
+                        case 'creditCard':
+                            if (empty($card_no) || empty($exp_date) || empty($cv_code) || empty($cardOwner_name)) {
+                                alert("Fill all the Credit Card fields", "danger");
+                                $pay_status = false;
+                            }
+                            break;
+                        case 'cash':
+                            if (empty($ssn)) {
+                                alert("Fill the cash ssn field", "danger");
+                                $pay_status = false;
+                            }
+                            break;
+                        case 'bank':
+                            if (empty($bank_name) || empty($account_no) || empty($account_name)) {
+                                alert("Fill all the Bank fields", "danger");
+                                $pay_status = false;
+                            }
+                            break;
+                    }
+                    if ($pay_status) {
+                        alert("All good!", "success");
+                    }
+                }
+            }
+        }
+        function alert($message, $type)
+        {
+            echo "<div class='alert alert-$type' role='alert'>
+            $message
+          </div>";
+        }
+        ?>
+    </div>
     <!-- ##### Checkout Area Start ##### -->
     <div class="checkout_area section-padding-80">
         <div class="container">
@@ -56,7 +127,8 @@
 
                         <div class="cart-page-heading mb-30">
                             <h5>Billing Address</h5>
-                            <h6>
+                            <!-- Get user location -->
+                            <p>
                                 <?php
                                 // $ip = $_SERVER['REMOTE_ADDR']; // Get the user's IP address
                                 $ip = '213.6.149.217';
@@ -77,72 +149,184 @@
                                     echo "Unable to retrieve user location.";
                                 }
                                 ?>
-                            </h6>
+                            </p>
                         </div>
 
                         <form action="#" method="post">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="first_name">First Name <span>*</span></label>
-                                    <input type="text" class="form-control" id="first_name" value="" required>
+                                    <input type="text" class="form-control" id="first_name" name="f_name" value="<?= isset($_POST['f_name']) ? $_POST['f_name'] : ''; ?>" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="last_name">Last Name <span>*</span></label>
-                                    <input type="text" class="form-control" id="last_name" value="" required>
+                                    <input type="text" class="form-control" id="last_name" name="l_name" value="<?= isset($_POST['l_name']) ? $_POST['l_name'] : ''; ?>" required>
                                 </div>
                                 <div class="col-12 mb-4">
                                     <label for="email_address">Email Address <span>*</span></label>
-                                    <input type="email" class="form-control" id="email_address" value="">
+                                    <input type="email" class="form-control" id="email_address" name="email" value="<?= isset($_POST['email']) ? $_POST['email'] : ''; ?>" required>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label for="country">Country <span>*</span></label>
-                                    <select class="w-100" id="country">
-                                        <option value="usa">United States</option>
-                                        <option value="uk">United Kingdom</option>
-                                        <option value="ger">Germany</option>
-                                        <option value="fra">France</option>
-                                        <option value="ind">India</option>
-                                        <option value="aus">Australia</option>
-                                        <option value="bra">Brazil</option>
-                                        <option value="cana">Canada</option>
+                                    <label for="country">City <span>*</span></label>
+                                    <select class="w-100" name="city" id="city" required>
+                                        <?PHP
+                                        if (isset($_POST['city'])) {
+                                            $city = $_POST['city'];
+                                            echo $_POST['city'];
+                                        }
+                                        ?>
+                                        <option value="jer" <?= ($city == 'jer') ? 'selected' : ''; ?>>Jerusalem</option>
+                                        <option value="ram" <?= ($city == 'ram') ? 'selected' : ''; ?>>Ramallah</option>
+                                        <option value="gza" <?= ($city == 'gza') ? 'selected' : ''; ?>>Gaza</option>
+                                        <option value="heb" <?= ($city == 'heb') ? 'selected' : ''; ?>>Hebron</option>
+                                        <option value="jen" <?= ($city == 'jen') ? 'selected' : ''; ?>>Jenin</option>
+                                        <option value="jer" <?= ($city == 'jer') ? 'selected' : ''; ?>>Jericho</option>
+                                        <option value="nab" <?= ($city == 'nab') ? 'selected' : ''; ?>>Nablus</option>
+                                        <option value="isr" <?= ($city == 'isr') ? 'selected' : ''; ?>>Is real</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label for="city">Town/City <span>*</span></label>
-                                    <input type="text" class="form-control" id="city" value="">
-                                </div>
-                                <div class="col-12 mb-3">
                                     <label for="street_address">Address <span>*</span></label>
-                                    <input type="text" class="form-control mb-3" id="street_address" value="">
+                                    <input type="text" class="form-control mb-3" id="street_address" name="address" value="<?= isset($_POST['address']) ? $_POST['address'] : ''; ?>" required>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="postcode">Postcode <span>*</span></label>
-                                    <input type="text" class="form-control" id="postcode" value="">
+                                    <input type="text" class="form-control" id="postcode" name="postcode" value="<?= isset($_POST['postcode']) ? $_POST['postcode'] : ''; ?>" required>
                                 </div>
 
                                 <div class="col-12 mb-3">
-                                    <label for="state">Province <span>*</span></label>
-                                    <input type="text" class="form-control" id="state" value="">
-                                </div>
-                                <div class="col-12 mb-3">
                                     <label for="phone_number">Phone No <span>*</span></label>
-                                    <input type="number" class="form-control" id="phone_number" min="0" value="">
+                                    <input type="number" class="form-control" id="phone_number" min="0" name="phone" value="<?= isset($_POST['phone']) ? $_POST['phone'] : ''; ?>" placeholder="05" required>
+                                </div>
+                                <?php
+                                $pp = '';
+                                $cash = '';
+                                $cc = '';
+                                $bank = '';
+                                if (isset($_POST['Pmethod'])) {
+                                    $Pmethod = $_POST['Pmethod'];
+                                    $pp = ($Pmethod == 'paypal');
+                                    $cash = ($Pmethod == 'cash');
+                                    $cc = ($Pmethod == 'creditCard');
+                                    $bank = ($Pmethod == 'bank');
+                                }
+
+                                ?>
+
+                                <div class="col-12 mb-3">
+                                    <label>Payment method <span>*</span></label>
+                                    <div id="accordion" role="tablist" class="mb-4">
+                                        <div class="form-check card-header pe-2" role="tab" id="heading1">
+                                            <input type="radio" name="Pmethod" class="form-check-input <?= ($pp ? '' : 'collapsed') ?>" data-toggle="collapse" href="#collapse1" aria-expanded="<?= ($pp ? 'true' : 'false') ?>" aria-controls="collapseTwo" id="Pmethod" min="0" required value="paypal" <?= ($pp ? 'checked' : '') ?>>
+                                            <label for="1" class="form-check-label">Paypal <i class="fa-brands fa-paypal"></i></label>
+                                            <div id="collapse1" class="collapse <?= ($pp ? 'show' : '') ?>" role="tabpanel" aria-labelledby="heading1" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <label for="email"> Your Paypal Email</label>
+                                                    <input id="email" name="paypal_email" value="<?= isset($_POST['paypal_email']) ? $_POST['paypal_email'] : ''; ?>" type="email" class="form-control" placeholder="Email or mobile number">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check card-header " role="tab" id="heading2">
+                                            <input type="radio" name="Pmethod" class="form-check-input <?= ($cash ? '' : 'collapsed') ?>" data-toggle="collapse" href="#collapse2" aria-expanded="<?= ($cash ? 'true' : 'false') ?>" aria-controls="collapse2" id="Pmethod" min="0" required value="cash" <?= ($cash ? 'checked' : '') ?>>
+                                            <label for="2" class="form-check-label">Cash on delievery <i class="fa-solid fa-sack-dollar"></i></label>
+                                            <div id="collapse2" class="collapse <?= ($cash ? 'show' : '') ?>" role="tabpanel" aria-labelledby="heading2" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <label for="ssn"> Your SSN</label>
+                                                    <input id="ssn" name="ssn" value="<?= isset($_POST['ssn']) ? $_POST['ssn'] : ''; ?>" type="text" class="form-control" placeholder="SSN or ID">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check card-header ps-2 " role="tab" id="heading3">
+                                            <input type="radio" name="Pmethod" class="form-check-input <?= ($cc ? '' : 'collapsed') ?>" data-toggle="collapse" href="#collapse3" aria-expanded="<?= ($cc ? 'true' : 'false') ?>" aria-controls="collapse3" id="Pmethod" min="0" required value="creditCard" <?= ($cc ? 'checked' : '') ?>>
+                                            <label for="3" class="form-check-label">Credit card <i class="fa-regular fa-credit-card"></i></label>
+                                            <div id="collapse3" class="collapse <?= ($cc ? 'show' : '') ?>" role="tabpanel" aria-labelledby="heading3" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <div calss="col mb-3">
+                                                        <label for="">CARD NUMBER</label>
+                                                        <input type="text" name="card_no" value="<?= isset($_POST['card_no']) ? $_POST['card_no'] : ''; ?>" id="" class="form-control" placeholder="Valid Card Number">
+                                                    </div>
+                                                    <br>
+                                                    <div calss="row m-5" style="display: flex;">
+                                                        <div class="col-6 p-0">
+                                                            <label for="">EXPIRATION DATE</label>
+                                                            <input type="text" name="exp_date" value="<?= isset($_POST['exp_date']) ? $_POST['exp_date'] : ''; ?>" id="" class="form-control" placeholder="MM/DD">
+                                                        </div>
+                                                        <div class="col-6 ps-1">
+                                                            <label for="">CV CODE</label>
+                                                            <input type="text" name="cv_code" value="<?= isset($_POST['cv_code']) ? $_POST['cv_code'] : ''; ?>" id="" class="form-control" placeholder="CVC">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div calss="col mb-3">
+                                                        <label for="">CARD OWNER</label>
+                                                        <input type="text" name="cardOwnerName" value="<?= isset($_POST['cardOwnerName']) ? $_POST['cardOwnerName'] : ''; ?>" id="card_owner" class="form-control" placeholder="Card Owner Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check card-header " role="tab" id="heading4">
+                                            <input type="radio" name="Pmethod" class="form-check-input <?= ($bank ? '' : 'collapsed') ?>" data-toggle="collapse" href="#collapse4" aria-expanded="<?= ($bank ? 'true' : 'false') ?>" aria-controls="collapse4" id="4" min="0" required value="bank" <?= ($bank ? 'checked' : '') ?>>
+                                            <label for="4" class="form-check-label">Direct bank transfer <i class="fa-solid fa-money-bill-transfer"></i></label>
+                                            <div id="collapse4" class="collapse <?= ($bank ? 'show' : '') ?>" role="tabpanel" aria-labelledby="heading4" data-parent="#accordion">
+                                                <div class="card-body">
+
+                                                    <div class="col-12 mb-3 p-0">
+                                                        <select name="bank_name" class="form-control w-100">
+                                                            <?PHP
+                                                            if (isset($_POST['bank_name'])) {
+                                                                $bankn = $_POST['bank_name'];
+                                                            }
+                                                            ?>
+                                                            <option selected>Select Bank</option>
+                                                            <option <?= ($bankn == 'bp') ? 'selected' : ''; ?> value="bp">Bank of Palestine</option>
+                                                            <option <?= ($bankn == 'aib') ? 'selected' : ''; ?> value="aib">Arab Islamic Bank</option>
+                                                            <option <?= ($bankn == 'aqb') ? 'selected' : ''; ?> value="aqb">Al Quds Bank</option>
+                                                            <option <?= ($bankn == 'pinb') ? 'selected' : ''; ?> value="pinb">Palestine Investment Bank</option>
+                                                            <option <?= ($bankn == 'tnb') ? 'selected' : ''; ?> value="tnb">The National Bank TNB</option>
+                                                            <option <?= ($bankn == 'ab') ? 'selected' : ''; ?> value="ab">Arab Bank</option>
+                                                            <option <?= ($bankn == 'bj') ? 'selected' : ''; ?> value="bj">Bank of Jordan</option>
+                                                            <option <?= ($bankn == 'bi') ? 'selected' : ''; ?> value="bi">Bank of Israel</option>
+                                                        </select>
+                                                    </div>
+                                                    <br>
+
+                                                    <div calss="col mb-3">
+                                                        <br>
+                                                        <label for="">Acount NO</label>
+                                                        <input type="text" name="account_no" value="<?= isset($_POST['account_no']) ? $_POST['account_no'] : ''; ?>" id="" class="form-control" placeholder="Acount NO">
+                                                    </div>
+                                                    <br>
+
+                                                    <div calss="col mb-3">
+                                                        <label for="">Account Holder Name</label>
+                                                        <input type="text" name="account_name" value="<?= isset($_POST['account_name']) ? $_POST['account_name'] : ''; ?>" id="" class="form-control" placeholder="Account Holder Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
 
                                 <div class="col-12">
                                     <div class="custom-control custom-checkbox d-block mb-2">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">Terms and conitions</label>
+                                        <input type="checkbox" class="custom-control-input" name="T&C" value="true" id="customCheck1" required>
+                                        <label class="custom-control-label" for="customCheck1">Terms and conitions <span>*</span></label>
                                     </div>
                                     <div class="custom-control custom-checkbox d-block mb-2">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                        <input type="checkbox" class="custom-control-input" name="create_account" value="true" id="customCheck2">
                                         <label class="custom-control-label" for="customCheck2">Create an accout</label>
                                     </div>
                                     <div class="custom-control custom-checkbox d-block">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck3">
+                                        <input type="checkbox" class="custom-control-input" name="subscribe" value="true" id="customCheck3">
                                         <label class="custom-control-label" for="customCheck3">Subscribe to our newsletter</label>
                                     </div>
+                                </div>
+                                <div class="col-12 mt-5">
+                                    <input type="submit" class="btn essence-btn" name="submitBtn" value="Place Order">
                                 </div>
                             </div>
                         </form>
@@ -150,7 +334,7 @@
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
-                    <div class="order-details-confirmation">
+                    <div class="order-details-confirmation" style="position: sticky; top: 100px;">
 
                         <div class="cart-page-heading">
                             <h5>Your Order</h5>
@@ -180,64 +364,6 @@
                             <li><span>Total</span> <span><?= $total ?>$</span></li>
                         </ul>
 
-                        <div id="accordion" role="tablist" class="mb-4">
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingOne">
-                                    <h6 class="mb-0">
-                                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><i class="fa fa-circle-o mr-3"></i>Paypal</a>
-                                    </h6>
-                                </div>
-
-                                <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <form method="post">
-                                            <div class="col-12 mb-3">
-                                                <label for="state">Province <span>*</span></label>
-                                                <input type="text" class="form-control" id="state" value="">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingTwo">
-                                    <h6 class="mb-0">
-                                        <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="fa fa-circle-o mr-3"></i>cash on delievery</a>
-                                    </h6>
-                                </div>
-                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quis in veritatis officia inventore, tempore provident dignissimos.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingThree">
-                                    <h6 class="mb-0">
-                                        <a class="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><i class="fa fa-circle-o mr-3"></i>credit card</a>
-                                    </h6>
-                                </div>
-                                <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse quo sint repudiandae suscipit ab soluta delectus voluptate, vero vitae</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingFour">
-                                    <h6 class="mb-0">
-                                        <a class="collapsed" data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour"><i class="fa fa-circle-o mr-3"></i>direct bank transfer</a>
-                                    </h6>
-                                </div>
-                                <div id="collapseFour" class="collapse show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est cum autem eveniet saepe fugit, impedit magni.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <a href="#" class="btn essence-btn">Place Order</a>
                     </div>
                 </div>
             </div>

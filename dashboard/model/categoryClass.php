@@ -19,7 +19,7 @@ class Category
             $sql->execute();
             echo "New record created successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -42,7 +42,7 @@ class Category
             $sql->execute();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
             $status = 'false';
         }
         $conn = null;
@@ -65,7 +65,7 @@ class Category
             $sql->execute();
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
             $status = 'false';
         }
         $conn = null;
@@ -97,7 +97,7 @@ class Category
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -124,7 +124,7 @@ class Category
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }

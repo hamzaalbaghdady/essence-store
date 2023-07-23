@@ -1,9 +1,10 @@
 <?php
 require_once "dashboard/model/cartClass.php";
 require_once "dashboard/model/productClass.php";
+// require_once "dashboard/model/userClass.php";
+
 $cart = new Cart;
 $product = new product;
-$user_id = 1; // TODO
 $items = $cart->getCartItems($user_id);
 
 ?>
@@ -77,17 +78,26 @@ $items = $cart->getCartItems($user_id);
 
         <!-- Cart Summary -->
         <div class="cart-amount-summary">
+            <?php
+            if (count($items) == 0) {
+                echo "<h4>You haven't added any products to your cart yet!</h4><br><br>
+                <i class='fa-solid fa-cart-plus' style='font-size:300px;'></i></i>";
+            } else {
+                echo "
+                    <h2>Summary</h2>
+                    <ul class='summary-table'>
+                        <li><span>subtotal:</span> <span> $subtotal$</span></li>
+                        <li><span>delivery:</span> <span>Free</span></li>
+                        <li><span>discount:</span> <span>-$discount%</span></li>
+                        <li><span>total:</span> <span>$total$</span></li>
+                    </ul>
+                    <div class='checkout-btn mt-100'>
+                        <a href='checkout.php' class='btn essence-btn'>check out</a>
+                    </div>";
+            }
+            ?>
 
-            <h2>Summary</h2>
-            <ul class="summary-table">
-                <li><span>subtotal:</span> <span><?= $subtotal ?>$</span></li>
-                <li><span>delivery:</span> <span>Free</span></li>
-                <li><span>discount:</span> <span>-<?= $discount ?>%</span></li>
-                <li><span>total:</span> <span><?= $total ?>$</span></li>
-            </ul>
-            <div class="checkout-btn mt-100">
-                <a href="checkout.php" class="btn essence-btn">check out</a>
-            </div>
+
         </div>
     </div>
 </div>

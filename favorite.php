@@ -2,6 +2,9 @@
     require_once "dashboard/model/productClass.php";
     require_once "dashboard/model/favoritesClass.php";
     $fav = new Favorites;
+    if (isset($_GET['d'])) {
+        $fav->delete($_GET['d']);
+    }
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -74,7 +77,7 @@
                                 <div class="product-topbar d-flex align-items-center justify-content-between">
                                     <!-- Total Products -->
                                     <div class="total-products">
-                                        <p><span><?= count($fav->getAll()) ?></span> products found</p>
+                                        <p><span><?= count($fav->getAll($user_id)) ?></span> products found</p>
                                     </div>
                                     <!-- Sorting -->
                                     <div class="product-sorting d-flex">
@@ -97,7 +100,9 @@
 
                             <?php
 
-                            $favorites = $fav->getAll();
+                            $favorites = $fav->getAll($user_id);
+                            if (count($favorites) == 0)
+                                echo "<h4 style='text-align: center; color:red;'>You haven't added any thing to your favourites!</h4>";
                             foreach ($favorites as $val) {
                                 $array = $product->searchById($val['product_id']);
                                 $cover_array = json_decode($array['images_src'], true);
@@ -123,7 +128,7 @@
                                         $date $discount
                                         <!-- Favourite -->
                                         <div class='product-favourite'>
-                                            <a href='#' class='favme fa fa-heart active'></a>
+                                            <a href='favorite.php?d=$val[id]' class='favme fa fa-heart active'></a>
                                         </div>
                                     </div>
                                     <!-- Product Description -->
@@ -159,20 +164,6 @@
 
                         </div>
                     </div>
-                    <!-- Pagination -->
-                    <nav aria-label="navigation">
-                        <ul class="pagination mt-50 mb-70 justify-content-center">
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">21</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
         </section>
         <!-- ##### Shop Grid Area End ##### -->

@@ -1,6 +1,6 @@
 
 <?php
-require "database.php";
+require_once "database.php";
 class user
 {
     private $u_id;
@@ -8,59 +8,12 @@ class user
     private $email;
     private $pass;
 
-    public function __construct($id, $name, $email, $password)
-    {
-        $this->u_id = $id;
-        $this->u_name = $name;
-        $this->email = $email;
-        $this->pass = $password;
-    }
 
-    public function getUId()
-    {
-        return $this->u_id;
-    }
-
-    public function setUId($u_id)
-    {
-        $this->u_id = $u_id;
-    }
-
-    public function getUName()
-    {
-        return $this->u_name;
-    }
-
-    public function setUName($u_name)
-    {
-        $this->u_name = $u_name;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function getPass()
-    {
-        return $this->pass;
-    }
-
-    public function setPass($pass)
-    {
-        // hash the bassword before store it in database
-        $this->pass = password_hash($pass, PASSWORD_DEFAULT);
-    }
 
     /* function to vallidate if the user exist in database
-        its take one argemnt 'email' and return the password
+        its take tow argemnts 'email' and 'pass' then return the status
     */
-    public function valliedUser($email)
+    public function valliedUser($email, $pass)
     {
         try {
             $db = new Database;
@@ -73,9 +26,118 @@ class user
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
             $result = $sql->fetch();
+            // return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+        if (password_verify($pass, $result['pass']))
+            return true;
+        else return false;
+    }
+    public function userExists($email)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $conn->prepare("SELECT u.email FROM `users` u WHERE u.email=:email;");
+            $sql->bindParam(':email', $email);
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetch();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+
+        if ($result['email' == $email])
+            return true;
+        else return false;
+    }
+    public function createUser($fname, $lname, $pass, $email, $status, $info)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $conn->prepare("INSERT INTO `users`(`f_name`, `l_name`, `email`, `pass`, `info`, `status`)
+             VALUES (:fname, :lname, :email, :pass, :info, :status);");
+            $pass = password_hash($pass, PASSWORD_DEFAULT);
+            $sql->bindParam(':fname', $fname);
+            $sql->bindParam(':lname', $lname);
+            $sql->bindParam(':email', $email);
+            $sql->bindParam(':pass', $pass);
+            $sql->bindParam(':info', $info);
+            $sql->bindParam(':status', $status);
+            $sql->execute();
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+    public function getUser($email)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $sql = $conn->prepare("SELECT * FROM `users` u WHERE u.email=:email;");
+            $sql->bindParam(':email', $email);
+
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetch();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+    public function getALL()
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $sql = $conn->prepare("SELECT * FROM `users`;");
+            $sql->execute();
+
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+    public function updateStatus($id, $status)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $conn->prepare("UPDATE `users` SET `status`=:status WHERE id=:id;");
+            $sql->bindParam(':id', $id);
+            $sql->bindParam(':status', $status);
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetch();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -107,7 +169,7 @@ class user
             $sql->execute();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -127,7 +189,7 @@ class user
             $sql->execute();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -146,7 +208,7 @@ class user
             $sql->execute();
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }

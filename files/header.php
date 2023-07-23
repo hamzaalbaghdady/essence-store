@@ -1,12 +1,32 @@
 <?php
 require_once "dashboard/model/cartClass.php";
 require_once "dashboard/model/productClass.php";
+require_once "dashboard/model/userClass.php";
 $cart = new Cart;
 $product = new product;
-$user_id = 1; // TODO
+
+session_start();
+if (isset($_SESSION['user'])) {
+    $user_email = $_SESSION['user'];
+    $user = new user;
+    $user = $user->getUser($user_email);
+    $user_id = $user['id'];
+    $user_name = $user['f_name'];
+    $log = "out";
+} else {
+    $user_id = 0;
+    $user_name = "<i class='fa-solid fa-arrow-right-to-bracket'></i>";
+    $log = "in";
+}
 $items = $cart->getCartItems($user_id);
 
+
 ?>
+
+<head>
+    <!-- sweet alert -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
 <header class="header_area">
     <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
         <!-- Classy Menu -->
@@ -30,27 +50,27 @@ $items = $cart->getCartItems($user_id);
                             <div class="megamenu">
                                 <ul class="single-mega cn-col-4">
                                     <li class="title">Women's Collection</li>
-                                    <li><a href="shop.php">Dresses</a></li>
-                                    <li><a href="shop.php">Blouses &amp; Shirts</a></li>
-                                    <li><a href="shop.php">T-shirts</a></li>
-                                    <li><a href="shop.php">Rompers</a></li>
-                                    <li><a href="shop.php">Bras &amp; Panties</a></li>
+                                    <li><a href="search.php?cid=5">Dresses</a></li>
+                                    <li><a href="search.php?cid=5">Blouses &amp; Shirts</a></li>
+                                    <li><a href="search.php?cid=5">T-shirts</a></li>
+                                    <li><a href="search.php?cid=5">Rompers</a></li>
+                                    <li><a href="search.php?cid=5">Bras &amp; Panties</a></li>
                                 </ul>
                                 <ul class="single-mega cn-col-4">
                                     <li class="title">Men's Collection</li>
-                                    <li><a href="shop.php">T-Shirts</a></li>
-                                    <li><a href="shop.php">Polo</a></li>
-                                    <li><a href="shop.php">Shirts</a></li>
-                                    <li><a href="shop.php">Jackets</a></li>
-                                    <li><a href="shop.php">Trench</a></li>
+                                    <li><a href="search.php?cid=6">T-Shirts</a></li>
+                                    <li><a href="search.php?cid=6">Polo</a></li>
+                                    <li><a href="search.php?cid=6">Shirts</a></li>
+                                    <li><a href="search.php?cid=6">Jackets</a></li>
+                                    <li><a href="search.php?cid=6">Trench</a></li>
                                 </ul>
                                 <ul class="single-mega cn-col-4">
                                     <li class="title">Kid's Collection</li>
-                                    <li><a href="shop.php">Dresses</a></li>
-                                    <li><a href="shop.php">Shirts</a></li>
-                                    <li><a href="shop.php">T-shirts</a></li>
-                                    <li><a href="shop.php">Jackets</a></li>
-                                    <li><a href="shop.php">Trench</a></li>
+                                    <li><a href="search.php?cid=7">Dresses</a></li>
+                                    <li><a href="search.php?cid=7">Shirts</a></li>
+                                    <li><a href="search.php?cid=7">T-shirts</a></li>
+                                    <li><a href="search.php?cid=7">Jackets</a></li>
+                                    <li><a href="search.php?cid=7">Trench</a></li>
                                 </ul>
                                 <div class="single-mega cn-col-4">
                                     <img src="img/bg-img/bg-6.jpg" alt="">
@@ -92,7 +112,8 @@ $items = $cart->getCartItems($user_id);
             </div>
             <!-- User Login Info -->
             <div class="user-login-info">
-                <a href="Login.php" title="Login"><i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+                <a <?= ($log == 'in') ? "href='Login.php'" : "onclick='alert_confirm()'"; ?> title="Log<?= $log ?>"><?= $user_name ?></a>
+
             </div>
             <!-- Cart Area -->
             <div class="cart-area">

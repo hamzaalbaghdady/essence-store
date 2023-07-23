@@ -19,7 +19,7 @@ class Brand
             $sql->execute();
             echo "New record created successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -41,7 +41,7 @@ class Brand
             $sql->execute();
             echo "Record Edited successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -62,7 +62,7 @@ class Brand
             $sql->execute();
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
             $status = 'false';
         }
         $conn = null;
@@ -94,7 +94,7 @@ class Brand
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }

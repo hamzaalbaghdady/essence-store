@@ -2,6 +2,7 @@
 include_once "dashboard/model/productClass.php";
 include_once "dashboard/model/categoryClass.php";
 include_once "dashboard/model/brandClass.php";
+include_once "dashboard/model/favoritesClass.php";
 $product = new product;
 
 if (isset($_POST['searchBtn'])) {
@@ -22,38 +23,26 @@ if (isset($_POST['max_price'])) {
     echo " Max price: " . $price2;
 } else $price2 = "";
 
-$url = $_SERVER['QUERY_STRING'];
-$xurl = [
-    'page' => '',
-    'cid' => '',
-    'c' => '',
-    'b' => ''
-];
 
-if (isset($_GET['page']))
+if (isset($_GET['page'])) {
     $offset = $_GET['page'] * 9;
-else $offset = "";
+} else $offset = "";
 
 if (isset($_GET['cid'])) {
     $category = $_GET['cid'];
-    $xurl['cid'] = $category;
 } else $category = "";
 
 if (isset($_GET['c'])) {
     $color = $_GET['c'];
-    $xurl['c'] = $color;
 } else $color = "";
 
 if (isset($_GET['b'])) {
     $brand = $_GET['b'];
-    $xurl['b'] = $brand;
 } else $brand = "";
+$url = "";
 
 $search_result = $product->Xsearch($name, $sort, $offset, $category, $price1, $price2, $color, $brand);
-// $xurl = implode('&', array_map(function ($key, $value) {
-//     return $key . '=' . $value;
-// }, array_keys($xurl), $xurl));;
-// echo $xurl;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -269,6 +258,9 @@ $search_result = $product->Xsearch($name, $sort, $offset, $category, $price1, $p
                                     $price = $val['price'] - ($val['price'] * $val['discount'] * 0.01);
                                     $oldPrice = $val['price'] . "$";
                                 }
+                                $favorites = new Favorites;
+                                $fav = $favorites->getAll($user_id, $val['id']);
+                                $is_fav = ($fav == null) ? "" : "active";
 
                                 echo "
                                 <!-- Single Product -->
@@ -280,7 +272,7 @@ $search_result = $product->Xsearch($name, $sort, $offset, $category, $price1, $p
                                         $date $discount
                                         <!-- Favourite -->
                                         <div class='product-favourite'>
-                                            <a href='#' class='favme fa fa-heart'></a>
+                                            <a href='productDetails.php?id=$val[id]&f=$val[id]' class='favme fa fa-heart $is_fav'></a>
                                         </div>
                                     </div>
                                     <!-- Product Description -->
@@ -322,11 +314,10 @@ $search_result = $product->Xsearch($name, $sort, $offset, $category, $price1, $p
                             <?PHP
 
                             // get count of pages
-                            // $pages_count = ceil(count($search_result) / 9);
-                            $pages_count = ceil(70 / 9);
+                            $pages_count = ceil(count($search_result) / 9);
                             // 
                             for ($i = 1; $i <= $pages_count; $i++) {
-                                if ($page_no == $i) {
+                                if ($page_no == $i || (!isset($_GET['page']) && $i == 1)) {
                                     $activeClass = "active";
                                     $style = "style='color:#fff'";
                                 } else {

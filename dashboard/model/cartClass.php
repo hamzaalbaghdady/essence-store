@@ -22,7 +22,7 @@ class Cart
             $sql->execute();
             $status = "true";
         } catch (PDOException $ex) {
-            // echo "Connection failed: " . $ex->getMessage();
+            // echo "Error:  " . $ex->getMessage();
             $status = "false";
         }
         $conn = null;
@@ -45,7 +45,7 @@ class Cart
             $sql->execute();
             echo "Record Deleted successfully";
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
@@ -60,7 +60,7 @@ class Cart
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
 
-            $sql = $conn->prepare("SELECT * FROM `cart` c WHERE c.user_id=:id;");
+            $sql = $conn->prepare("SELECT * FROM `cart` c WHERE c.user_id=:id ORDER by id DESC;");
             $sql->bindParam(':id', $id);
 
             $sql->execute();
@@ -69,7 +69,7 @@ class Cart
             $result = $sql->fetchAll();
             return $result;
         } catch (PDOException $ex) {
-            echo "Connection failed: " . $ex->getMessage();
+            echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
     }
