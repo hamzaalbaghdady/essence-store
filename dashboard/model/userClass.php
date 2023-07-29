@@ -48,15 +48,14 @@ class user
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
             $result = $sql->fetch();
-            return $result;
         } catch (PDOException $ex) {
             echo "Error:  " . $ex->getMessage();
         }
         $conn = null;
 
-        if ($result['email' == $email])
-            return true;
-        else return false;
+        if ($result == false)
+            return false;
+        else return true;
     }
     public function createUser($fname, $lname, $pass, $email, $status, $info)
     {
@@ -67,7 +66,10 @@ class user
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = $conn->prepare("INSERT INTO `users`(`f_name`, `l_name`, `email`, `pass`, `info`, `status`)
              VALUES (:fname, :lname, :email, :pass, :info, :status);");
-            $pass = password_hash($pass, PASSWORD_DEFAULT);
+            $pass = "";
+            if ($pass != "")
+                $pass = password_hash($pass, PASSWORD_DEFAULT);
+            else $pass = "Unset";
             $sql->bindParam(':fname', $fname);
             $sql->bindParam(':lname', $lname);
             $sql->bindParam(':email', $email);
@@ -142,15 +144,9 @@ class user
         $conn = null;
     }
 
-    // function to create session
-    public function createSession($email, $password)
-    {
-        session_start();
-        $_SESSION['email'] = $email;
-        $_SESSION['pass'] = $password;
-    }
 
-    public function editUser($id, $name, $email, $password, $info)
+
+    public function editUser($id, $fname, $lname, $email, $info)
     {
         try {
             $db = new Database;
@@ -158,16 +154,15 @@ class user
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
-            $sql = $conn->prepare("UPDATE `users` s SET `name`=:name,`email`=:email,`pass`=:pass,`info`=:info WHERE s.id=:id;");
+            $sql = $conn->prepare("UPDATE `users` s SET `f_name`=:fname, `l_name`=:lname, `email`=:email,`info`=:info WHERE s.id=:id;");
 
             $sql->bindParam(':id', $id);
-            $sql->bindParam(':name', $name);
+            $sql->bindParam(':fname', $fname);
+            $sql->bindParam(':lname', $lname);
             $sql->bindParam(':email', $email);
-            $sql->bindParam(':pass', $password);
             $sql->bindParam(':info', $info);
             // no results return
             $sql->execute();
-            echo "Record Edited successfully";
         } catch (PDOException $ex) {
             echo "Error:  " . $ex->getMessage();
         }

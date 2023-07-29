@@ -82,36 +82,38 @@ if ($result['discount'] == 0) {
 
     <div class=" d-flex justify-content-center">
         <?php
-        // check if user have an acount 
-        if (isset($_SESSION['user'])) {
-            // add to cart
-            if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                $product_id = $id;
-                $size = $_POST['size'];
-                $color = $_POST['color'];
-                $btn = $_POST['submitBtn'];
-                if (isset($btn)) {
-                    if (empty($size) || empty($color)) {
-                        echo "<div class='alert alert-danger' role='alert'>Fill all the fields!</div>";
-                    } else if ($result['quantity'] <= 1) {
-                        echo "<div class='alert alert-danger' role='alert'>We dont have this product in Stock at the moment, try later. Thanks </div>";
-                    } else {
-                        $cart = new Cart;
-                        $stat = $cart->addToCart($product_id, $user_id, $color, $size);
-                        if ($stat == "true") {
-                            echo "<div class='alert alert-success' role='alert'>Product has been added to your cart successfully.</div>";
-                        } else echo "<div class='alert alert-warning' role='alert'>The product has been already added to your cart!</div>";
-                    }
+
+        // add to cart
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $product_id = $id;
+            $size = $_POST['size'];
+            $color = $_POST['color'];
+            $btn = $_POST['submitBtn'];
+            if (isset($btn)) {
+                if (empty($size) || empty($color)) {
+                    echo "<div class='alert alert-danger' role='alert'>Fill all the fields!</div>";
+                } else if ($result['quantity'] <= 1) {
+                    echo "<div class='alert alert-danger' role='alert'>We dont have this product in Stock at the moment, try later. Thanks </div>";
+                } else {
+                    $cart = new Cart;
+                    $stat = $cart->addToCart($product_id, $user_id, $color, $size);
+                    if ($stat == "true") {
+                        echo "<div class='alert alert-success' role='alert'>Product has been added to your cart successfully.</div>";
+                    } else echo "<div class='alert alert-warning' role='alert'>The product has been already added to your cart!</div>";
                 }
             }
-            // add to Favourites
-            if (isset($_GET['f'])) {
+        }
+        // add to Favourites
+        // check if user have an acount 
+
+        if (isset($_GET['f'])) {
+            if (isset($_SESSION['user'])) {
                 $statf = $fav->addToFav($user_id, $id);
                 if ($statf == "true") {
                     echo "<div class='alert alert-success' role='alert'>Product has been added to your favourites successfully.</div>";
                 } else echo "<div class='alert alert-warning' role='alert'>The product has been already added to your favourites!</div>";
-            }
-        } else echo "<div class='alert alert-danger' role='alert'>You need to have an account to add to cart or favourites!</div>";
+            } else echo "<div class='alert alert-danger' role='alert'>You need to have an account to add to favourites!</div>";
+        }
         ?>
 
     </div>

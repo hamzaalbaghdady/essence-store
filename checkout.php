@@ -1,3 +1,4 @@
+<?php require_once "dashboard/model/salesClass.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,66 +50,99 @@
     <!-- ##### Breadcumb Area End ##### -->
     <div class="container d-flex justify-content-center mt-3">
         <?php
-        if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $f_name = $_POST['f_name'];
-            $l_name = $_POST['l_name'];
-            $email = $_POST['email'];
-            $city = $_POST['city'];
-            $address = $_POST['address'];
-            $postcode = $_POST['postcode'];
-            $phone = $_POST['phone'];
-            $Pmethod = $_POST['Pmethod'];
-            //
-            $paypal_email = $_POST['paypal_email'];
-            $ssn = $_POST['ssn'];
-            $card_no = $_POST['card_no'];
-            $exp_date = $_POST['exp_date'];
-            $cv_code = $_POST['cv_code'];
-            $cardOwner_name = $_POST['cardOwnerName'];
-            $bank_name = $_POST['bank_name'];
-            $account_no = $_POST['account_no'];
-            $account_name = $_POST['account_name'];
-            //
-            $TC = $_POST['T&C'];
-            $submitBtn = $_POST['submitBtn'];
-            if (isset($submitBtn)) {
-                if (empty($f_name) || empty($l_name) || empty($email) || empty($city) || empty($TC) || empty($address) || empty($postcode) || empty($phone) || empty($Pmethod)) {
-                    alert("Fill all the fields", "danger");
-                } else {
-                    $pay_status = true;
-                    switch ($Pmethod) {
-                        case 'paypal':
-                            if (empty($paypal_email)) {
-                                alert("Fill the paypal email field!", "danger");
-                                $pay_status = false;
-                            }
-                            break;
 
-                        case 'creditCard':
-                            if (empty($card_no) || empty($exp_date) || empty($cv_code) || empty($cardOwner_name)) {
-                                alert("Fill all the Credit Card fields", "danger");
-                                $pay_status = false;
+        if (count($cart->getCartItems($user_id)) == 0) {
+            alert("Your cart is empty", "danger");
+        } else {
+            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $f_name = $_POST['f_name'];
+                $l_name = $_POST['l_name'];
+                $email = $_POST['email'];
+                $city = $_POST['city'];
+                $address = $_POST['address'];
+                $postcode = $_POST['postcode'];
+                $phone = $_POST['phone'];
+                $Pmethod = $_POST['Pmethod'];
+                //
+                $paypal_email = $_POST['paypal_email'];
+                $ssn = $_POST['ssn'];
+                $card_no = $_POST['card_no'];
+                $exp_date = $_POST['exp_date'];
+                $cv_code = $_POST['cv_code'];
+                $cardOwner_name = $_POST['cardOwnerName'];
+                $bank_name = $_POST['bank_name'];
+                $account_no = $_POST['account_no'];
+                $account_name = $_POST['account_name'];
+                //
+                $TC = $_POST['T&C'];
+                $submitBtn = $_POST['submitBtn'];
+                if (isset($submitBtn)) {
+                    if (empty($f_name) || empty($l_name) || empty($email) || empty($city) || empty($TC) || empty($address) || empty($postcode) || empty($phone) || empty($Pmethod)) {
+                        alert("Fill all the fields", "danger");
+                    } else {
+                        $pay_status = true;
+                        $Pmethod_info = array();
+                        switch ($Pmethod) {
+                            case 'paypal':
+                                if (empty($paypal_email)) {
+                                    alert("Fill the paypal email field!", "danger");
+                                    $pay_status = false;
+                                } else $Pmethod_info = ["name" => $Pmethod, "paypal_email" => $paypal_email];
+                                break;
+
+                            case 'creditCard':
+                                if (empty($card_no) || empty($exp_date) || empty($cv_code) || empty($cardOwner_name)) {
+                                    alert("Fill all the Credit Card fields", "danger");
+                                    $pay_status = false;
+                                } else $Pmethod_info = ["name" => $Pmethod, "card_no" => $card_no, "exp_date" => $exp_date,  "cv_code" => $cv_code,  "cardOwner_name" => $cardOwner_name];
+                                break;
+
+                            case 'cash':
+                                if (empty($ssn)) {
+                                    alert("Fill the cash ssn field", "danger");
+                                    $pay_status = false;
+                                } else $Pmethod_info = ["name" => $Pmethod, "ssn" => $ssn];
+                                break;
+
+                            case 'bank':
+                                if (empty($bank_name) || empty($account_no) || empty($account_name)) {
+                                    alert("Fill all the Bank fields", "danger");
+                                    $pay_status = false;
+                                } else $Pmethod_info = ["name" => $Pmethod, "bank_name" => $bank_name, "account_name" => $account_name, "account_no" => $account_no];
+                                break;
+                        }
+                        if ($pay_status) {
+                            $info = ['city' => $city, 'address' => $address, 'postcode' => $postcode, 'phone' => $phone, 'Pmethod' => $Pmethod, 'TC' => $TC, 'payment_method' => $Pmethod_info];
+                            $info = json_encode($info);
+                            $users = new user;
+                            // check if user already exists
+                            if ($users->userExists($email)) {
+                                $users->editUser($user_id, $f_name, $l_name, $email, $info);
+                            } else $users->createUser($f_name, $l_name, '', $email, 'not member', $info);
+                            // add sale
+                            $Sale = new Sale;
+                            foreach ($items as $item) {
+                                // get product data
+                                $product_id = $item['product_id'];
+                                $resultx = $product->searchById($product_id);
+                                // get price
+                                if ($resultx['discount'] == 0) {
+                                    $pricex = $resultx['price'];
+                                } else {
+                                    $pricex = $resultx['price'] - ($resultx['price'] * $resultx['discount'] * 0.01);
+                                }
+                                $Sale->addSale($product_id, $user_id, $pricex);
                             }
-                            break;
-                        case 'cash':
-                            if (empty($ssn)) {
-                                alert("Fill the cash ssn field", "danger");
-                                $pay_status = false;
-                            }
-                            break;
-                        case 'bank':
-                            if (empty($bank_name) || empty($account_no) || empty($account_name)) {
-                                alert("Fill all the Bank fields", "danger");
-                                $pay_status = false;
-                            }
-                            break;
-                    }
-                    if ($pay_status) {
-                        alert("All good!", "success");
+                            $cart->removeAll($user_id);
+                            alert("All good!", "success");
+                            // header("location:checkout.php?s=c");
+                        }
                     }
                 }
             }
         }
+
+
         function alert($message, $type)
         {
             echo "<div class='alert alert-$type' role='alert'>
@@ -172,8 +206,7 @@
                                         <?PHP
                                         if (isset($_POST['city'])) {
                                             $city = $_POST['city'];
-                                            echo $_POST['city'];
-                                        }
+                                        } else $city = "";
                                         ?>
                                         <option value="jer" <?= ($city == 'jer') ? 'selected' : ''; ?>>Jerusalem</option>
                                         <option value="ram" <?= ($city == 'ram') ? 'selected' : ''; ?>>Ramallah</option>
@@ -277,18 +310,18 @@
                                                         <select name="bank_name" class="form-control w-100">
                                                             <?PHP
                                                             if (isset($_POST['bank_name'])) {
-                                                                $bankn = $_POST['bank_name'];
-                                                            }
+                                                                $bankName = $_POST['bank_name'];
+                                                            } else $bankName = "";
                                                             ?>
                                                             <option selected>Select Bank</option>
-                                                            <option <?= ($bankn == 'bp') ? 'selected' : ''; ?> value="bp">Bank of Palestine</option>
-                                                            <option <?= ($bankn == 'aib') ? 'selected' : ''; ?> value="aib">Arab Islamic Bank</option>
-                                                            <option <?= ($bankn == 'aqb') ? 'selected' : ''; ?> value="aqb">Al Quds Bank</option>
-                                                            <option <?= ($bankn == 'pinb') ? 'selected' : ''; ?> value="pinb">Palestine Investment Bank</option>
-                                                            <option <?= ($bankn == 'tnb') ? 'selected' : ''; ?> value="tnb">The National Bank TNB</option>
-                                                            <option <?= ($bankn == 'ab') ? 'selected' : ''; ?> value="ab">Arab Bank</option>
-                                                            <option <?= ($bankn == 'bj') ? 'selected' : ''; ?> value="bj">Bank of Jordan</option>
-                                                            <option <?= ($bankn == 'bi') ? 'selected' : ''; ?> value="bi">Bank of Israel</option>
+                                                            <option <?= ($bankName == 'bp') ? 'selected' : ''; ?> value="bp">Bank of Palestine</option>
+                                                            <option <?= ($bankName == 'aib') ? 'selected' : ''; ?> value="aib">Arab Islamic Bank</option>
+                                                            <option <?= ($bankName == 'aqb') ? 'selected' : ''; ?> value="aqb">Al Quds Bank</option>
+                                                            <option <?= ($bankName == 'pinb') ? 'selected' : ''; ?> value="pinb">Palestine Investment Bank</option>
+                                                            <option <?= ($bankName == 'tnb') ? 'selected' : ''; ?> value="tnb">The National Bank TNB</option>
+                                                            <option <?= ($bankName == 'ab') ? 'selected' : ''; ?> value="ab">Arab Bank</option>
+                                                            <option <?= ($bankName == 'bj') ? 'selected' : ''; ?> value="bj">Bank of Jordan</option>
+                                                            <option <?= ($bankName == 'bi') ? 'selected' : ''; ?> value="bi">Bank of Israel</option>
                                                         </select>
                                                     </div>
                                                     <br>

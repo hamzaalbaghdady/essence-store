@@ -5,6 +5,8 @@ require_once "../model/productClass.php";
 require_once "../model/categoryClass.php";
 require_once "../model/brandClass.php";
 require_once "../model/userClass.php";
+require_once "../model/salesClass.php";
+
 // if (!isset($_SESSION['email']) && !isset($_SESSION['pass'])) {
 //     header('Location:login.php');
 // }
@@ -12,6 +14,8 @@ $brand = new Brand;
 $category = new Category;
 $product = new product;
 $user = new user;
+$sales = new Sale;
+
 
 ?>
 <!DOCTYPE html>
@@ -59,9 +63,18 @@ $user = new user;
             color: #a30808;
         }
 
+        td {
+            white-space: nowrap;
+            /* Prevent text wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 70px;
+            max-width: 100px;
+        }
+
         .x {
             overflow-y: scroll;
-            max-height: 500px !important;
+            max-height: 400px !important;
         }
 
         .x::-webkit-scrollbar {
@@ -131,7 +144,9 @@ $user = new user;
                                                 
                                                 <td><a href='#'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
                                                 <a onclick='alert_confirm(\"#\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
-                                                <a href='#'><i class='fa-solid fa-shield me-2' title='Block'></i></a></td>
+                                                <a href='#'><i class='fa-solid fa-shield me-2' title='Block'></i></a>
+                                                <a href='#'><i class='fa-solid fa-circle-info me-2' title='Info'></i></a>
+                                                </td>
                                                 </tr>";
                                         }
                                         ?>
@@ -181,15 +196,15 @@ $user = new user;
 
                                             echo "<tr>
                                                 <td>$val[id]</td>
-                                                <td>$val[name]</td>
+                                                <td title='$val[name]'>$val[name]</td>
                                                 <td>$val[price]$</td>
                                                 <td>$val[discount]</td>
                                                 <td>$val[quantity]</td>
                                                 <td>$val[rate]</td>
                                                 <td>$val[brand]</td>
-                                                <td>$categories_Json</td>
+                                                <td title='$categories_Json'>$categories_Json</td>
                                                 <td>$val[date_of_additon]</td>
-                                                <td>$val[colors]</td>
+                                                <td title='$val[colors]'>$val[colors]</td>
                                                 <td><a href='editProduct.php?id=$val[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
                                                 <a onclick='alert_confirm(\"deleteProduct.php?id=$val[id]\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
                                                 <a href='../../productDetails.php?id=$val[id]'><i class='fa-solid fa-eye' title='View'></i></a></td>
@@ -206,6 +221,48 @@ $user = new user;
                 </div>
             </div>
             <!-- Table End -->
+
+            <!-- Recent Sales Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Recent Salse</h6>
+                    </div>
+                    <div class="table-responsive x">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">ID</th>
+                                    <th scope="col">User ID</th>
+                                    <th scope="col">Product ID</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $sales_r = $sales->getAll();
+                                foreach ($sales_r as $val) {
+                                    $p_name = $product->searchById($val['product_id']);
+                                    $p_name = $p_name['name'];
+                                    echo "
+                                    <tr>
+                                    <td>$val[id]</td>
+                                    <td>$val[user_id]</td>
+                                    <td>$val[product_id]</td>
+                                    <td>$val[amount]</td>
+                                    <td>$val[dateTime_Of_operation]</td>
+                                    </tr>
+                                    ";
+                                }
+                                ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Sales End -->
 
 
             <!-- Table Start -->

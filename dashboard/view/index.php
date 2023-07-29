@@ -1,6 +1,10 @@
 <?php
 require_once "../model/productClass.php";
+require_once "../model/salesClass.php";
+require_once "../model/userClass.php";
 $product = new product;
+$sales = new Sale;
+$user = new user;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,6 +41,12 @@ $product = new product;
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <style>
+        .x {
+            overflow-y: scroll;
+            max-height: 300px !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -70,7 +80,7 @@ $product = new product;
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0"><?= $sales->getSalesSum('date') ?>$</h6>
                             </div>
                         </div>
                     </div>
@@ -79,7 +89,7 @@ $product = new product;
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0"><?= $sales->getSalesSum() ?>$</h6>
                             </div>
                         </div>
                     </div>
@@ -88,7 +98,7 @@ $product = new product;
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Users</p>
-                                <h6 class="mb-0">12</h6>
+                                <h6 class="mb-0"><?= count($user->getALL()) ?></h6>
                             </div>
                         </div>
                     </div>
@@ -139,65 +149,35 @@ $product = new product;
                         <h6 class="mb-0">Recent Salse</h6>
                         <a href="table.php">Show All</a>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive x">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-white">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">User ID</th>
+                                    <th scope="col">Product ID</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
+                                <?php
+                                $sales_r = $sales->getAll();
+                                foreach ($sales_r as $val) {
+                                    $p_name = $product->searchById($val['product_id']);
+                                    $p_name = $p_name['name'];
+                                    echo "
+                                    <tr>
+                                    <td>$val[id]</td>
+                                    <td>$val[user_id]</td>
+                                    <td>$val[product_id]</td>
+                                    <td>$val[amount]</td>
+                                    <td>$val[dateTime_Of_operation]</td>
+                                    </tr>
+                                    ";
+                                }
+                                ?>
+
                             </tbody>
                         </table>
                     </div>

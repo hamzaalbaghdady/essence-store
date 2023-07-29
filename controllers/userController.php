@@ -1,7 +1,7 @@
 
 <?php
 require_once "../dashboard/model/userClass.php";
-
+// log out
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if (isset($_GET['l'])) {
         session_start();
@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     }
 }
 
+// save user dadta
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $user = new user;
     if (isset($_POST['signupBtn'])) {

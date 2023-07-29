@@ -218,7 +218,7 @@ class product
     }
 
     //
-    public function Xsearch($name, $sort, $offset, $category, $price1, $price2, $color, $brand)
+    public function Xsearch($name, $sort, $offset, $categories, $min_price, $max_price, $colors, $brand)
     {
         try {
             $db = new Database;
@@ -232,64 +232,77 @@ class product
             WHERE 1=1";
             // update the query based on selected parameters
             if ($name != "") {
-                $query .= " AND p.name like :name";
+                $query .= " AND p.name like :name ";
                 $name = '%' . $name . '%';
             }
-            if ($category != "") {
-                $query .= " AND c.id=:id";
+            if ($categories != []) {
+                $cids = implode(',', $categories);
+                $query .= " AND c.id IN ($cids) ";
             }
-            if ($price1 != "") {
-                $query .= " AND p.price < :price1";
+            if ($min_price != "") {
+                $query .= " AND p.price > :min_price ";
             }
-            if ($price2 != "") {
-                $query .= " AND p.price > :price2 ";
+            if ($max_price != "") {
+                $query .= " AND p.price < :max_price";
             }
-            if ($color != "") {
-                $query .= " AND p.colors like :color";
-                $color = '%' . $color . '%';
+            if ($colors != "") {
+                foreach ($colors as $key => $color) {
+                    $query .= " AND p.colors LIKE :color$key ";
+                }
             }
+
             if ($brand != "") {
-                $query .= " AND p.brand=:brand";
+                $query .= " AND p.brand=:brand ";
             }
-            $query .= " GROUP BY p.id;";
+
+            $query .= " GROUP BY p.id";
+
+            if ($categories != []) {
+                $query .= " HAVING COUNT(DISTINCT c.id)= " . count($categories);
+            }
+
             if ($sort != "") {
-                $query .= " ORDER BY p.:sort DESC";
+                if ($sort == "id")
+                    $query .= " ORDER BY p.id DESC";
+                else if ($sort == "rate")
+                    $query .= " ORDER BY p.rate DESC";
+                else if ($sort == "discount")
+                    $query .= " ORDER BY p.discount DESC";
             }
+
             $query .= " limit 9 ";
+
             if ($offset != "") {
                 $query .= " OFFSET :offset";
             }
 
-
-
             $sql = $conn->prepare($query);
+
             // set parameters
             if ($name != "") {
                 $sql->bindParam(':name', $name, PDO::PARAM_STR);
             }
-            if ($category != "") {
-                $sql->bindParam(':id', $category);
+
+            if ($min_price != "") {
+                $sql->bindParam(':min_price', $min_price);
             }
-            if ($price1 != "") {
-                $sql->bindParam(':price1', $price);
+            if ($max_price != "") {
+                $sql->bindParam(':max_price', $max_price);
             }
-            if ($price2 != "") {
-                $sql->bindParam(':price2', $price);
-            }
-            if ($color != "") {
-                $sql->bindParam(':color', $color, PDO::PARAM_STR);
+            if ($colors != "") {
+                foreach ($colors as $key => $color) {
+                    $color = "%$color%";
+                    $sql->bindParam(':color' . $key, $color, PDO::PARAM_STR);
+                }
             }
             if ($brand != "") {
                 $sql->bindParam(':brand', $brand, PDO::PARAM_STR);
             }
-            if ($sort != "") {
-                $sql->bindParam(':sort', $sort, PDO::PARAM_STR);
-            }
             if ($offset != "") {
                 $sql->bindParam(':offset', $offset);
             }
-            // echo $query;
             $sql->execute();
+
             // set the resulting array to associative
             $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
             $result = $sql->fetchAll();
