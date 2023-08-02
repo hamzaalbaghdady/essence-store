@@ -162,6 +162,33 @@ class product
         }
         $conn = null;
     }
+    // edit only the quantity attrbute in product table in database, no return value
+    public function editQuantity($id)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // get old quantity
+            $sql1 = $conn->prepare("SELECT p.quantity FROM `products` p WHERE p.id=:id");
+            $sql1->bindParam(':id', $id);
+            $sql1->execute();
+            $result = $sql1->setFetchMode(PDO::FETCH_ASSOC);
+            $quantity = $sql1->fetch();
+            $quantity = $quantity['quantity'] - 1;
+
+            // update old quantity
+            $num = 10;
+            $sql2 = $conn->prepare("UPDATE `products` p SET `quantity`=:quantity WHERE p.id=:id");
+            $sql2->bindParam(':id', $id);
+            $sql2->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+            $sql2->execute();
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
 
     // deletes a specifec product based on id in database
     public function deleteProduct($id)

@@ -20,7 +20,8 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <!-- sweet alert -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
 
 </head>
 
@@ -132,6 +133,7 @@
                                     $pricex = $resultx['price'] - ($resultx['price'] * $resultx['discount'] * 0.01);
                                 }
                                 $Sale->addSale($product_id, $user_id, $pricex);
+                                $product->editQuantity($product_id);
                             }
                             $cart->removeAll($user_id);
                             alert("All good!", "success");
@@ -146,8 +148,8 @@
         function alert($message, $type)
         {
             echo "<div class='alert alert-$type' role='alert'>
-            $message
-          </div>";
+                $message
+              </div>";
         }
         ?>
     </div>
@@ -408,6 +410,8 @@
     <?php include "files/footer.php" ?>
     <!-- ##### Footer Area End ##### -->
 
+    <!-- sweet alert -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->

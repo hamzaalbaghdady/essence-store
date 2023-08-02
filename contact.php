@@ -1,3 +1,29 @@
+<?PHP
+require_once "dashboard/model/userClass.php";
+$u = new user;
+
+function alert($message, $type)
+{
+    echo "<div class='alert alert-$type w-50 mx-auto my-3' role='alert'>
+        $message
+      </div>";
+}
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if (isset($_POST['submitBtn'])) {
+        $email = $_POST['email'];
+        $message = $_POST['message'];
+        if (empty($email) || empty($message))
+            alert("Fill all the fields!", "danger");
+        else if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
+            alert("Unvalide email!", "danger");
+        else {
+            $status = $u->createMessage($email, $message);
+        }
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,6 +58,12 @@
     <?php include "files/cart.php" ?>
     <!-- ##### Right Side Cart End ##### -->
 
+    <?php
+    if ($status)
+        alert("Your message was sent successfully. We will respond ASAP :)", "success");
+    else
+        alert("Your message already sent!", "danger");
+    ?>
 
     <div class="contact-area d-flex align-items-center">
 

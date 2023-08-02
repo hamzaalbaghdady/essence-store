@@ -207,6 +207,72 @@ class user
         }
         $conn = null;
     }
+
+    function createMessage($email, $message)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $conn->prepare("INSERT INTO `messages`(`email`, `message`) VALUES (:email, :message);");
+            $sql->bindParam(':email', $email);
+            $sql->bindParam(':message', $message);
+
+            $sql->execute();
+        } catch (PDOException $ex) {
+            // echo "Error:  " . $ex->getMessage();
+            $status = false;
+        }
+        $conn = null;
+        return $status;
+    }
+    function getMessages($limit)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = $conn->prepare("SELECT * FROM `messages` ORDER BY id DESC LIMIT :lim;");
+            $sql->bindParam(':lim', $limit, PDO::PARAM_INT);
+
+            $sql->execute();
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+    function getTimeDifference($datetime)
+    {
+        // Convert the given datetime string to a DateTime object
+        $givenDateTime = new DateTime($datetime);
+
+        // Get the current datetime as a DateTime object
+        $currentDateTime = new DateTime();
+
+        // Calculate the time difference
+        $interval = $currentDateTime->diff($givenDateTime);
+
+        // Return the time difference as a string
+
+        if ($interval->y > 0) {
+            return $interval->format('%y years');
+        } elseif ($interval->m > 0) {
+            return $interval->format('%m months');
+        } elseif ($interval->d > 0) {
+            return $interval->format('%d days');
+        } elseif ($interval->h > 0) {
+            return $interval->format('%h hours');
+        } elseif ($interval->i > 0) {
+            return $interval->format('%i minutes');
+        } else {
+            return $interval->format('%s seconds');
+        }
+    }
 }
 
 

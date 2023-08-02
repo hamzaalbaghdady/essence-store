@@ -25,7 +25,7 @@
 
 	<body>
 		<div class="main">
-			<input type="checkbox" id="chk" aria-hidden="true">
+			<input type="checkbox" id="chk" checked aria-hidden="true">
 
 			<div class="signup">
 				<form action="controllers/userController.php" method="POST">

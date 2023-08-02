@@ -1,7 +1,6 @@
-<?php
-require_once "../model/categoryClass.php";
-?>
 <?php include "files/head.php" ?>
+
+
 <div class="container-fluid position-relative d-flex p-0">
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -22,48 +21,41 @@ require_once "../model/categoryClass.php";
         <!-- Navbar Start -->
         <?php include "files/header.php" ?>
         <!-- Navbar End -->
-        <!-- php -->
-        <div class="container mt-5 d-flex justify-content-center">
-            <div class="alert alert-success" role="alert">
-                <?php
-                // add new category
-                if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                    $name = $_POST['name'];
-                    $btn = $_POST['submitBtn'];
-                    if (isset($btn)) {
-                        if (empty($name))
-                            echo "Fill all the fields!";
-                        $category = new Category;
-                        $category->addCat($name);
-                    } else echo "Fill all the fields!";
-                } else echo "Sorry you are not allowed here!";
 
-                ?>
-            </div>
-        </div>
-        <!-- php -->
 
-        <!-- Form Start -->
-        <div class="container-fluid pt-4 px-4 ">
-            <div class="col-sm-12 col-xl-6 mx-auto w-75">
-                <div class="bg-secondary rounded h-100 p-4">
-                    <h6 class="mb-4">Add New Category</h6>
-                    <form action="" method="POST">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name">
-
+        <!-- Blank Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="row vh-100 bg-secondary rounded justify-content-center mx-0">
+                <div class="col-md-8 text-center">
+                    <div class="h-100 bg-secondary rounded p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <h6 class="mb-0">Messages</h6>
                         </div>
+                        <?php
+                        $messages = $user->getMessages(15);
+                        foreach ($messages as $message) {
+                            $date_time = $user->getTimeDifference($message['date_time']);
 
-                        <button type="submit" name="submitBtn" class="btn btn-primary">Add</button>
-                        <button type="reset" class="btn btn-primary">Cancle</button>
-                    </form>
+                            echo "
+                                <div class='d-flex border-bottom py-3'>
+                                <img class='rounded-circle flex-shrink-0' src='img/enduser.jpg' alt='' style='width: 40px; height: 40px;'>
+                                <div class='w-100 ms-3'>
+                                    <div class='d-flex w-100 justify-content-between'>
+                                        <h6 class='mb-0'>$message[email]</h6>
+                                        <small>$date_time </small>
+                                    </div>
+                                    <div class='mt-3'> 
+                                        <p> $message[message] </p>
+                                    </div>
+                                </div>
+                            </div>";
+                        }
+                        ?>
+                    </div>
                 </div>
-
-
             </div>
         </div>
-        <!-- Form End -->
+        <!-- Blank End -->
 
 
         <!-- Footer Start -->
@@ -89,5 +81,4 @@ require_once "../model/categoryClass.php";
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
-
 <?php include "files/end.php" ?>

@@ -36,7 +36,7 @@
     <form class="d-none d-md-flex ms-4" action="test.php" method="post" title="Press Enter to search">
         <input class="form-control bg-dark border-0 me-1" type="search" placeholder="Search" name="search">
         <select name="field" class="form-select w-25">
-            <option selected>Field</option>
+            <option selected value="x">Field</option>
             <option value="Users">Users</option>
             <option value="Products">Products</option>
             <option value="Categories">Categories</option>
@@ -55,37 +55,28 @@
                 <span class="d-none d-lg-inline-flex">Message</span>
             </a>
             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a href="#" class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="ms-2">
-                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                            <small>15 minutes ago</small>
+                <?php
+                require_once "../model/userClass.php";
+                $u = new user;
+
+                $messages = $u->getMessages(3);
+                foreach ($messages as $message) {
+                    $date_time = $u->getTimeDifference($message['date_time']);
+                    echo "
+                    <a href='messages.php' class='dropdown-item'>
+                        <div class='d-flex align-items-center'>
+                            <img class='rounded-circle' src='img/enduser.jpg' alt='' style='width: 40px; height: 40px;'>
+                            <div class='ms-2'>
+                                <h6 class='fw-normal mb-0'>$message[email]</h6>
+                                <small>$date_time</small>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="ms-2">
-                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                            <small>15 minutes ago</small>
-                        </div>
-                    </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="ms-2">
-                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                            <small>15 minutes ago</small>
-                        </div>
-                    </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item text-center">See all message</a>
+                    </a>
+                    <hr class='dropdown-divider'>";
+                }
+                ?>
+
+                <a href="messages.php" class="dropdown-item text-center">See all message</a>
             </div>
         </div>
         <div class="nav-item dropdown">
@@ -120,7 +111,7 @@
             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                 <a href="#" class="dropdown-item">My Profile</a>
                 <a href="#" class="dropdown-item">Settings</a>
-                <a href="#" class="dropdown-item">Log Out</a>
+                <a href="../controller/logout.php" class="dropdown-item">Log Out</a>
             </div>
         </div>
 

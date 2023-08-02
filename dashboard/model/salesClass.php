@@ -40,7 +40,7 @@ class Sale
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connected successfully";
 
-            $sql = $conn->prepare("SELECT * FROM `sales` ORDER by id DESC LIMIT 20;");
+            $sql = $conn->prepare("SELECT * FROM `sales` ORDER by id DESC LIMIT 15;");
             $sql->execute();
 
             // set the resulting array to associative
