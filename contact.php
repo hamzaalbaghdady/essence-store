@@ -8,7 +8,7 @@ function alert($message, $type)
         $message
       </div>";
 }
-
+$status = "";
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_POST['submitBtn'])) {
         $email = $_POST['email'];
@@ -59,10 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <!-- ##### Right Side Cart End ##### -->
 
     <?php
-    if ($status)
-        alert("Your message was sent successfully. We will respond ASAP :)", "success");
-    else
+    if ($status == "")
+        echo '';
+    else if ($status == 'false')
         alert("Your message already sent!", "danger");
+    else if ($status == 'true')
+        alert("Your message was sent successfully. We will respond ASAP :)", "success");
+
     ?>
 
     <div class="contact-area d-flex align-items-center">

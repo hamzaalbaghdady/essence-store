@@ -240,9 +240,10 @@ class user
             $sql->bindParam(':message', $message);
 
             $sql->execute();
+            $status = 'true';
         } catch (PDOException $ex) {
             // echo "Error:  " . $ex->getMessage();
-            $status = false;
+            $status = 'false';
         }
         $conn = null;
         return $status;

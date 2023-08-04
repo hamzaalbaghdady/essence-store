@@ -101,7 +101,7 @@ $category = new Category;
                                                 <td><a href='editUser.php?id=$u[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
                                                 <a onclick='alert_confirm(\"deleteUser.php?id=$u[id]\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
                                                 $user_status
-                                                <a href='#'><i class='fa-solid fa-circle-info me-2' title='Info'></i></a>
+                                                <a onclick='showInfo($u[info])' ><i class='fa-solid fa-circle-info me-2' title='Info'></i></a>
                                                 </td>
                                                 </tr>";
                                     }
@@ -346,6 +346,19 @@ $category = new Category;
             icon: 'error',
             title: 'Oops...',
             text: 'You can not delete a category with any product. ',
+        })
+    }
+
+    function showInfo(info) {
+        Swal.fire({
+            icon: 'info',
+            title: 'User Informations',
+            html: 'City: ' + info.city + '<br>' +
+                'Address: ' + info.address + '<br>' +
+                'Postcode: ' + info.postcode + '<br>' +
+                'Phone number: ' + info.phone + '<br>' +
+                'Payment method: ' + info.Pmethod + '<br>' +
+                "=> " + JSON.stringify(info.payment_method),
         })
     }
 

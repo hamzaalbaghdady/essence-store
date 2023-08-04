@@ -5,6 +5,11 @@ require_once "../model/brandClass.php";
 
 <?php include "files/head.php" ?>
 
+<head>
+    <!-- My Stylesheet -->
+    <link href="css/myStyle.css" rel="stylesheet">
+</head>
+
 <div class="container-fluid position-relative d-flex p-0">
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -108,6 +113,7 @@ require_once "../model/brandClass.php";
                                     <option value="yellow">yellow</option>
                                     <option value="blue">blue</option>
                                     <option value="gray">gray</option>
+                                    <option value="#804000">brown</option>
                                     <option value="transparent">Other</option>
                                 </select>
                                 <div id="colors-container"></div>
