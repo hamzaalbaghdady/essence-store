@@ -52,6 +52,31 @@ class Sale
         }
         $conn = null;
     }
+    public function review($user_id, $product_id)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // echo "Connected successfully";
+
+            $sql = $conn->prepare("SELECT * FROM `sales` s WHERE s.user_id= :u_id AND s.product_id= :p_id  LIMIT 1;");
+            $sql->bindParam(':p_id', $product_id);
+            $sql->bindParam(':u_id', $user_id);
+            $sql->execute();
+
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetch();
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+        if ($result == null)
+            return false;
+        else return true;
+    }
     // return all cart items for a spicefic user based on id
     public function getSalesSum($date = '')
     {

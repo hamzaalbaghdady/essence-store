@@ -1,11 +1,13 @@
 <?PHP
 require_once "dashboard/model/productClass.php";
+require_once "dashboard/model/salesClass.php";
 require_once "dashboard/model/categoryClass.php";
 require_once "dashboard/model/cartClass.php";
 require_once "dashboard/model/favoritesClass.php";
 
 $product = new product;
 $fav = new Favorites;
+$sales = new Sale;
 
 $id = $_GET['id'];
 $result = $product->searchById($id);
@@ -55,7 +57,7 @@ if ($result['discount'] == 0) {
             color: gold;
         }
 
-        .rating {
+        .ratingx {
             margin: 20px 0px;
             padding: 10px 0px;
         }
@@ -67,6 +69,28 @@ if ($result['discount'] == 0) {
 
         img {
             max-height: 600px;
+        }
+
+        /*  */
+
+        .rating {
+            display: inline-block;
+            font-size: 30px;
+            color: #FFD700;
+            /* Golden yellow color */
+            cursor: pointer;
+        }
+
+        /* Styles for the unchecked stars */
+        .rating .far {
+            color: #ccc;
+            /* Light gray color */
+        }
+
+        /* Styles for the checked stars */
+        .rating .fas {
+            color: #FFD700;
+            /* Golden yellow color */
         }
     </style>
 </head>
@@ -185,7 +209,7 @@ if ($result['discount'] == 0) {
                     </div>
                 </div>
             </form>
-            <div class="rating">
+            <div class="ratingx">
                 <?php
                 $rate = $result['rate'];
                 echo "<b>$rate</b>";
@@ -197,6 +221,39 @@ if ($result['discount'] == 0) {
                     echo "<i class='fa-regular fa-star '></i>";
                 }
                 ?>
+                <div class="mt-3">
+                    <?php
+                    if ($sales->review($user_id, $id))
+                        echo "<button class='btn btn-info' onclick='review()'>Add Review</button>";
+                    ?>
+
+                    <template id="my-template">
+                        <swal-title>
+                            Rate Our Product:
+                        </swal-title>
+                        <swal-html>
+                            <label>Your Rate</label><br><br>
+                            <div class="rating" id="starRating">
+                                <i class="far fa-star" data-star="1"></i>
+                                <i class="far fa-star" data-star="2"></i>
+                                <i class="far fa-star" data-star="3"></i>
+                                <i class="far fa-star" data-star="4"></i>
+                                <i class="far fa-star" data-star="5"></i>
+                            </div>
+                        </swal-html>
+                        <swal-input type="textarea" label="Your Review" placeholder="Review" name="review" />
+                        <swal-button type="confirm">
+                            Submit
+                        </swal-button>
+                        <swal-button type="cancel">
+                            Cancel
+                        </swal-button>
+
+                        <swal-param name="allowEscapeKey" value="false" />
+                        <swal-param name="customClass" value='{ "popup": "my-popup" }' />
+                        <swal-function-param name="didOpen" value="popup => console.log(popup)" />
+                    </template>
+                </div>
             </div>
         </div>
         <!-- see also -->
@@ -315,6 +372,56 @@ if ($result['discount'] == 0) {
                     cartElement.classList.toggle('right-side-cart-area cart-on');
                 });
             });
+        }
+
+        function rate() {
+            const starRating = document.getElementById('starRating');
+
+            // Function to update the rating based on the selected star
+            function updateRating(selectedStar) {
+                const stars = starRating.querySelectorAll('i');
+
+                stars.forEach((star) => {
+                    const starValue = parseInt(star.getAttribute('data-star'));
+                    if (starValue <= selectedStar) {
+                        star.classList.remove('far');
+                        star.classList.add('fas');
+                    } else {
+                        star.classList.remove('fas');
+                        star.classList.add('far');
+                    }
+                });
+            }
+
+            // Event listener to handle the star click and update the rating
+            starRating.addEventListener('click', (event) => {
+                if (event.target.tagName === 'I') {
+                    const selectedStar = parseInt(event.target.getAttribute('data-star'));
+                    updateRating(selectedStar);
+                    // You can also send the selectedStar value to your backend or perform other actions with it.
+                }
+            });
+
+            // Example: Set the initial rating value (you can set this dynamically based on data from your backend)
+            const initialRating = 3;
+            updateRating(initialRating);
+            return selectedStar;
+        }
+
+        function review() {
+            Swal.fire({
+                template: '#my-template'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Your Review has been saved',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+            rate();
         }
     </script>
 

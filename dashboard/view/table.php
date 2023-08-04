@@ -86,6 +86,11 @@ $category = new Category;
 
                                     $users = $user->getALL();
                                     foreach ($users as $u) {
+                                        $user_status = '';
+                                        if ($u['status'] == "Blocked")
+                                            $user_status = "<a href='BlockUser.php?id=$u[id]'><i class='fa-solid fa-shield-halved me-2' title='Unblock'></i></a>";
+                                        else
+                                            $user_status = "<a href='BlockUser.php?id=$u[id]'><i class='fa-solid fa-shield me-2' title='Block'></i></a>";
                                         echo "<tr>
                                                 <td>$u[id]</td>
                                                 <td>$u[f_name]</td>
@@ -93,9 +98,9 @@ $category = new Category;
                                                 <td>$u[email]</td>
                                                 <td>$u[status]</td>
                                                 
-                                                <td><a href='#'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
-                                                <a onclick='alert_confirm(\"#\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
-                                                <a href='#'><i class='fa-solid fa-shield me-2' title='Block'></i></a>
+                                                <td><a href='editUser.php?id=$u[id]'><i class='fa-solid fa-pen-to-square me-2' title='Edit'></i></a> 
+                                                <a onclick='alert_confirm(\"deleteUser.php?id=$u[id]\")'><i class='fa-solid fa-trash-can me-2' title='Delete'></i></a>
+                                                $user_status
                                                 <a href='#'><i class='fa-solid fa-circle-info me-2' title='Info'></i></a>
                                                 </td>
                                                 </tr>";

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if (empty($fname) || empty($lname) || empty($email) || empty($pass)) {
             echo "Fill all the fields";
         } else {
-            $user->createUser($fname, $lname, $pass, $email, 'member', '');
+            $user->createUser($fname, $lname, $pass, $email, 'Member', '');
             header("Location:../login.php?s=l");
         }
     } else if (isset($_POST['loginBtn'])) {
@@ -37,9 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             echo "Fill all the fields";
         } else {
             if ($user->valliedUser($email, $pass)) {
-                session_start();
-                $_SESSION['user'] = $email;
-                header("Location:../index.php");
+                $data = $user->getUser($email);
+                $stat = $data['status'];
+                $id = $data['id'];
+                if ($stat === "Blocked") {
+                    header("Location:../Blocked_user.php?id=$id");
+                } else {
+                    session_start();
+                    $_SESSION['user'] = $email;
+                    header("Location:../index.php");
+                }
             } else header("Location:../login.php?s=f");
         }
     } else echo "You are not allowed here mother fucker";

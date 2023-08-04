@@ -66,7 +66,6 @@ class user
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = $conn->prepare("INSERT INTO `users`(`f_name`, `l_name`, `email`, `pass`, `info`, `status`)
              VALUES (:fname, :lname, :email, :pass, :info, :status);");
-            $pass = "";
             if ($pass != "")
                 $pass = password_hash($pass, PASSWORD_DEFAULT);
             else $pass = "Unset";
@@ -92,6 +91,27 @@ class user
 
             $sql = $conn->prepare("SELECT * FROM `users` u WHERE u.email=:email;");
             $sql->bindParam(':email', $email);
+
+            $sql->execute();
+            // set the resulting array to associative
+            $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $sql->fetch();
+            return $result;
+        } catch (PDOException $ex) {
+            echo "Error:  " . $ex->getMessage();
+        }
+        $conn = null;
+    }
+    public function getUserById($id)
+    {
+        try {
+            $db = new Database;
+            $conn = $db->conn;
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $sql = $conn->prepare("SELECT * FROM `users` u WHERE u.id=:id;");
+            $sql->bindParam(':id', $id);
 
             $sql->execute();
             // set the resulting array to associative

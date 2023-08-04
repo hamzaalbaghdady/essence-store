@@ -1,4 +1,7 @@
-<?php include "files/head.php" ?>
+<?php include "files/head.php";
+$user_id = $_GET['id'];
+$data = $user->getUserById($user_id)
+?>
 <div class="container-fluid position-relative d-flex p-0">
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -23,25 +26,57 @@
 
         <!-- Form Start -->
         <div class="container-fluid pt-4 px-4 ">
+            <div>
+                <?php
+                function alert($message, $type)
+                {
+                    echo "<div class='alert alert-$type w-50 mx-auto my-3' role='alert'>
+                            $message
+                          </div>";
+                }
+
+                if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                    if (isset($_POST['submitBtn'])) {
+                        $email = $_POST['email'];
+                        $f_name = $_POST['f_name'];
+                        $l_name = $_POST['l_name'];
+                        $info = $data['info'];
+                        if (empty($email) || empty($f_name) || empty($l_name))
+                            alert("Fill all the fields!", "danger");
+                        else if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
+                            alert("Unvalide email!", "danger");
+                        else {
+                            $user->editUser($user_id, $f_name, $l_name, $email, $info);
+                            alert("User has been Editted successfully", "success");
+                        }
+                    }
+                }
+                $data = $user->getUserById($user_id)
+                ?>
+            </div>
             <div class="col-sm-12 col-xl-6 mx-auto w-50">
                 <div class="bg-secondary rounded h-100 p-4">
                     <h6 class="mb-4">Edit User</h6>
                     <form action="" method="POST">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name">
+                        <div class="mb-3 row">
+                            <div class="col-6"> <label for="fname" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="fname" name="f_name" value="<?= $data['f_name'] ?>">
+                            </div>
+                            <div class="col-6"> <label for="lname" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lname" name="l_name" value="<?= $data['l_name'] ?>">
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="name">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?= $data['email']  ?>">
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label">Password</label>
-                            <input type="text" class="form-control" id="name">
+                            <label for="pass" class="form-label">Password</label>
+                            <input type="text" class="form-control" id="pass" name="pass" value="<?= $data['pass']  ?>" disabled>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Edit</button>
-                        <button type="reset" class="btn btn-primary">Cancle</button>
+                        <button type="submit" name="submitBtn" class="btn btn-primary">Edit</button>
+                        <a href="table.php" class="btn btn-primary">Cancle</a>
                     </form>
                 </div>
 
